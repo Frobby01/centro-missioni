@@ -270,6 +270,7 @@ body.sorting,body.sorting *{cursor:grabbing!important;user-select:none;-webkit-u
     <div class="hud">
       <div class="lvl" id="lvl"></div>
       <div class="streak" id="streak"></div>
+      <button class="ghost" id="sync" data-a="opensync" style="align-self:center"></button>
     </div>
   </header>
 
@@ -323,17 +324,64 @@ function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(
 function fmtDay(s){return parseYmd(s).toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})}
 
 /* ---------- storage ---------- */
-function persistLocal(){try{localStorage.setItem('cm_tasks',JSON.stringify(tasks))}catch(e){}}
+function persistLocal(){try{localStorage.setItem('cm_tasks',JSON.stringify(tasks));localStorage.setItem('cm_tombs',JSON.stringify(tombs))}catch(e){}}
 function loadLocal(){try{tasks=JSON.parse(localStorage.getItem('cm_tasks')||'[]')}catch(e){tasks=[]}}
 function xpOf(t){return SIZE_XP[t.size]||25}
 async function save(t){
   if(col){try{await col.doc(t.id).set(t)}catch(e){toast('Salvataggio non riuscito: '+(e&&e.code||'errore'))}}
-  else{var i=tasks.findIndex(function(x){return x.id===t.id});if(i<0)tasks.push(t);else tasks[i]=t;persistLocal();render()}
+  else{t=Object.assign({},t,{upd:Date.now()});delete tombs[t.id];var i=tasks.findIndex(function(x){return x.id===t.id});if(i<0)tasks.push(t);else tasks[i]=t;persistLocal();render();ghDirty()}
 }
 async function remove(id){
   if(col){try{await col.doc(id).delete()}catch(e){toast('Eliminazione non riuscita')}}
-  else{tasks=tasks.filter(function(x){return x.id!==id});persistLocal();render()}
+  else{tasks=tasks.filter(function(x){return x.id!==id});tombs[id]=Date.now();persistLocal();render();ghDirty()}
 }
+
+/* ---------- sync via GitHub (repo privato di dati + token personale) ---------- */
+var GH_REPO='Frobby01/centro-missioni-data',GH_FILE='tasks.json';
+var tombs={},ghToken='',ghSha=null,ghState='off',ghBusy=false,ghAgain=false,ghTimer=0,showSync=false;
+try{ghToken=localStorage.getItem('cm_ghtoken')||'';tombs=JSON.parse(localStorage.getItem('cm_tombs')||'{}')}catch(e){}
+function serialize(){return tasks.concat(Object.keys(tombs).map(function(id){return {id:id,del:true,upd:tombs[id]}}))}
+function mergeRemote(list){
+  var by={};serialize().forEach(function(x){by[x.id]=x});
+  list.forEach(function(r){var l=by[r.id];if(!l||(r.upd||0)>(l.upd||0))by[r.id]=r});
+  var cut=Date.now()-60*864e5;tasks=[];tombs={};
+  Object.keys(by).forEach(function(id){var x=by[id];if(x.del){if((x.upd||0)>cut)tombs[id]=x.upd}else tasks.push(x)});
+  persistLocal();
+}
+function b64enc(s){var b=new TextEncoder().encode(s),r='';for(var i=0;i<b.length;i++)r+=String.fromCharCode(b[i]);return btoa(r)}
+function b64dec(s){var r=atob(s.replace(/\s/g,'')),b=new Uint8Array(r.length);for(var i=0;i<r.length;i++)b[i]=r.charCodeAt(i);return new TextDecoder().decode(b)}
+async function ghReq(method,body){
+  var r=await fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE+(method==='GET'?'?t='+Date.now():''),{method:method,cache:'no-store',headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'},body:body?JSON.stringify(body):undefined});
+  return r;
+}
+async function ghGet(){
+  var r=await ghReq('GET');if(!r.ok){var e=new Error('http '+r.status);e.status=r.status;throw e}
+  var j=await r.json(),list=[];try{list=JSON.parse(b64dec(j.content))}catch(x){}
+  return {sha:j.sha,list:Array.isArray(list)?list:[]};
+}
+function setGh(s){ghState=s;var b=$('sync');if(b)b.textContent=({off:'☁ Collega sync',ok:'☁ Sincronizzato',busy:'☁ Sincronizzo…',err:'⚠ Sync non riuscita'})[s]}
+async function ghSync(push){
+  if(!ghToken)return;
+  if(ghBusy){ghAgain=ghAgain||push;return}
+  ghBusy=true;setGh('busy');
+  try{
+    for(var n=0;n<4;n++){
+      var r=await ghGet();mergeRemote(r.list);
+      if(push||ghAgain||n>0){
+        ghAgain=false;
+        var res=await ghReq('PUT',{message:'sync '+new Date().toISOString(),content:b64enc(JSON.stringify(serialize())),sha:r.sha});
+        if(res.status===409||res.status===422){push=true;continue}
+        if(!res.ok){var e=new Error('http '+res.status);e.status=res.status;throw e}
+        ghSha=(await res.json()).content.sha;
+      }
+      break;
+    }
+    setGh('ok');render();
+  }catch(e){setGh('err');toast(e.status===401||e.status===403||e.status===404?'Sync: token non valido o senza accesso al repo dati':'Sync non riuscita, riprovo');}
+  ghBusy=false;
+  if(ghAgain){ghAgain=false;ghSync(true)}
+}
+function ghDirty(){if(!ghToken)return;clearTimeout(ghTimer);ghTimer=setTimeout(function(){ghSync(true)},700)}
 
 /* ---------- gamification (tutto derivato dalle task completate) ---------- */
 function doneByDay(){var m={};tasks.forEach(function(t){if(t.done&&t.doneAt){m[t.doneAt]=(m[t.doneAt]||0)+1}});return m}
@@ -537,6 +585,9 @@ function importHTML(){
 }
 
 var sorting=false,pendingRender=false;
+function syncHTML(){
+  return '<section class="imp"><h2>Sincronizzazione tra dispositivi</h2><p>Le task si salvano in un repo GitHub privato (<b>'+GH_REPO+'</b>). Su ogni dispositivo serve un token personale: GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token, repository access solo su <b>centro-missioni-data</b>, permesso <b>Contents: Read and write</b>. Il token resta solo in questo browser.</p><div class="r"><input type="password" id="ghTok" placeholder="Incolla il token github_pat_…" aria-label="Token GitHub" autocomplete="off" style="flex:1;min-width:220px" value="'+esc(ghToken)+'"><button class="go" data-a="savesync">'+(ghToken?'Aggiorna token':'Collega')+'</button>'+(ghToken?'<button class="ghost" data-a="offsync">Scollega</button>':'')+'<button class="ghost" data-a="closesync">Chiudi</button></div></section>';
+}
 function render(){
   if(sorting){pendingRender=true;return}
   var s=stats();
@@ -557,7 +608,8 @@ function render(){
   $('tabs').innerHTML=T.map(function(t){return '<button class="tab" role="tab" data-v="'+t[0]+'" aria-selected="'+(view===t[0])+'">'+t[1]+'</button>'}).join('');
 
   var body=view==='settimana'?viewSettimana():view==='progressi'?viewProgressi(s):view==='progetti'?viewProgetti(s):view==='trofei'?viewTrofei(s):viewOggi(s);
-  $('view').innerHTML=(showImport?importHTML()+'<div style="height:16px"></div>':'')+body;
+  $('view').innerHTML=(showSync?syncHTML()+'<div style="height:16px"></div>':'')+(showImport?importHTML()+'<div style="height:16px"></div>':'')+body;
+  if(!col){setGh(ghToken?(ghState==='off'?'ok':ghState):'off')}else $('sync').hidden=true;
 }
 
 /* ---------- azioni ---------- */
@@ -610,6 +662,10 @@ document.addEventListener('click',function(e){
   else if(act==='wprev'){weekOff--;render()}
   else if(act==='wnext'){weekOff++;render()}
   else if(act==='wnow'){weekOff=0;render()}
+  else if(act==='opensync'){showSync=true;render()}
+  else if(act==='closesync'){showSync=false;render()}
+  else if(act==='savesync'){var tk=$('ghTok').value.trim();if(!tk){toast('Incolla il token');return}ghToken=tk;try{localStorage.setItem('cm_ghtoken',tk)}catch(x){}showSync=false;ghState='busy';render();ghSync(true).then(function(){if(ghState==='ok')toast('Sync attiva')})}
+  else if(act==='offsync'){ghToken='';ghState='off';try{localStorage.removeItem('cm_ghtoken')}catch(x){}showSync=false;render();toast('Sync scollegata: le task restano in questo browser')}
   else if(act==='openimp'){showImport=true;render()}
   else if(act==='closeimp'){showImport=false;render()}
   else if(act==='import')doImport();
@@ -724,7 +780,7 @@ render();
   if(db){
     col=db.collection('tasks');
     col.onSnapshot(function(snap){tasks=snap.docs.map(function(d){return d.data()}).filter(Boolean);render()},function(){col=null;loadLocal();render()});
-  }else{loadLocal();render()}
+  }else{loadLocal();render();if(ghToken){ghSync(false);setInterval(function(){if(!document.hidden&&!sorting)ghSync(false)},30000);document.addEventListener('visibilitychange',function(){if(!document.hidden)ghSync(false)})}}
 })();
 setInterval(function(){if(new Date().getDate()!==+todayStr().slice(-2)||false)render()},600000);
 })();
