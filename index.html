@@ -8,18 +8,18 @@
   --bg:#0c1015; --panel:#151a21; --panel2:#1c222b; --line:#262d38; --fg:#e7e9ee; --mut:#8b92a0; --dim:#5b6270;
   --ink:#11161d; --ink2:#1d2530; --ink-fg:#f2f4f7;
   --accent:#ff7a2e; --accent-fg:#1a0d03; --good:#3ecf8e; --warn:#f5a524; --bad:#ff6b6b;
-  --c-aisa:#5b9dff; --c-afk:#f5a524; --c-frobby:#ff5f9a; --c-giochi:#3ecf8e; --c-personale:#b18cff; --c-cinic:#2fc4e0; --c-vgi:#ff5252;
+  --c-aisa:#5b9dff; --c-afk:#f5a524; --c-frobby:#ff5f9a; --c-giochi:#3ecf8e; --c-personale:#b18cff; --c-cinic:#2fc4e0; --c-vgi:#ff5252; --c-nothing:#e8e8ea;
   --font:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif; --mono:'Geist Mono',ui-monospace,Menlo,Consolas,monospace;
   color-scheme:dark;
 }
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
   --bg:#eaf1ed; --panel:#ffffff; --panel2:#f1f4f2; --line:#e0e7e3; --fg:#14161a; --mut:#5c6472; --dim:#8b92a0;
   --accent:#f26a0f; --accent-fg:#ffffff; --good:#0f9d63; --warn:#b97300; --bad:#d63b3b;
-  --c-aisa:#2f77e6; --c-afk:#c97d00; --c-frobby:#e02a75; --c-giochi:#0f9d63; --c-personale:#7a4fe0; --c-cinic:#0a8fa8; --c-vgi:#d93636; color-scheme:light}}
+  --c-aisa:#2f77e6; --c-afk:#c97d00; --c-frobby:#e02a75; --c-giochi:#0f9d63; --c-personale:#7a4fe0; --c-cinic:#0a8fa8; --c-vgi:#d93636; --c-nothing:#2b2d33; color-scheme:light}}
 :root[data-theme="light"]{
   --bg:#eaf1ed; --panel:#ffffff; --panel2:#f1f4f2; --line:#e0e7e3; --fg:#14161a; --mut:#5c6472; --dim:#8b92a0;
   --accent:#f26a0f; --accent-fg:#ffffff; --good:#0f9d63; --warn:#b97300; --bad:#d63b3b;
-  --c-aisa:#2f77e6; --c-afk:#c97d00; --c-frobby:#e02a75; --c-giochi:#0f9d63; --c-personale:#7a4fe0; --c-cinic:#0a8fa8; --c-vgi:#d93636; color-scheme:light}
+  --c-aisa:#2f77e6; --c-afk:#c97d00; --c-frobby:#e02a75; --c-giochi:#0f9d63; --c-personale:#7a4fe0; --c-cinic:#0a8fa8; --c-vgi:#d93636; --c-nothing:#2b2d33; color-scheme:light}
 *{box-sizing:border-box}
 body{background:radial-gradient(900px 420px at 10% -8%,color-mix(in srgb,var(--accent) 13%,transparent),transparent),var(--bg);color:var(--fg);font:14px/1.45 var(--font);padding-block:20px 90px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 button,input,select{font:inherit;color:inherit}
@@ -163,6 +163,7 @@ body.sorting,body.sorting *{cursor:grabbing!important;user-select:none;-webkit-u
 .imp h2{margin:0;font-size:14px}
 .imp p{margin:0;color:var(--mut);font-size:13px;max-width:70ch}
 .imp .r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.imp textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;resize:vertical;font:inherit;color:inherit}
 .imp .go{background:var(--accent);color:var(--accent-fg);border:0;border-radius:6px;padding:8px 14px;font-weight:600}
 
 /* progressi */
@@ -262,6 +263,36 @@ body.sorting,body.sorting *{cursor:grabbing!important;user-select:none;-webkit-u
   .row .acts{grid-column:3/-1}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* responsive: impedisce lo scroll orizzontale di pagina e compatta il layout su telefono */
+html{-webkit-text-size-adjust:100%}
+.wrap{grid-template-columns:minmax(0,1fr)}
+.shell>*,.main>*{min-width:0}
+.tabs{scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.side{scrollbar-width:none}.side::-webkit-scrollbar{display:none}
+@media (max-width:860px){
+  body{padding-block:14px 80px}
+  .top{gap:10px}
+  .hud{width:100%;gap:8px}
+  .lvl{flex:1 1 100%;min-width:0}
+  .streak,#sync{flex:1 1 auto;justify-content:center}
+  #sync{padding:9px 12px;border-radius:16px;text-align:center}
+  .side{margin-inline:-16px;padding-inline:16px}
+  .side .tools{display:flex;gap:6px;margin:0;flex:none}
+  .side .tools .ghost{white-space:nowrap;border-radius:10px}
+  .tabs{width:auto;max-width:100%}
+  .tab{flex:none}
+  .add input,.add select,.imp input,.imp select,.imp textarea{font-size:16px}
+  .fc{flex-basis:170px}
+  .wk{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pgrid,.bgrid,.cols2,.top3{grid-template-columns:minmax(0,1fr)}
+  .stat{flex-basis:calc(50% - 5px)}
+  .imp .r>*{flex:1 1 auto}
+  .quest{padding:14px}
+  .hbar{grid-template-columns:90px minmax(0,1fr) 24px}
+  .acts{opacity:1}
+  .toast{white-space:normal;text-align:center}
+}
+@media (max-width:380px){.logo{width:32px;height:32px}.top h1{font-size:18px}.wk{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <div class="wrap">
@@ -301,6 +332,7 @@ var PROJECTS=[
   {id:'giochi',name:'Game Dev',sub:'Sviluppo dei miei giochi'},
   {id:'cinic',name:'Cinic Games',sub:'Cinic Games'},
   {id:'vgi',name:'Videogiochitalia.it',sub:'Videogiochitalia.it'},
+  {id:'nothing',name:'Nothing Essentials',sub:'Note e to-do da Essential Space'},
   {id:'personale',name:'Personale',sub:'Proton Calendar · Proton Mail'}
 ];
 var PM={};PROJECTS.forEach(function(p){PM[p.id]=p});
@@ -338,7 +370,7 @@ async function remove(id){
 
 /* ---------- sync via GitHub (repo privato di dati + token personale) ---------- */
 var GH_REPO='Frobby01/centro-missioni-data',GH_FILE='tasks.json';
-var tombs={},ghToken='',ghSha=null,ghState='off',ghBusy=false,ghAgain=false,ghTimer=0,showSync=false;
+var tombs={},ghToken='',ghSha=null,ghState='off',ghBusy=false,ghAgain=false,ghTimer=0,showSync=false,showText=false;
 try{ghToken=localStorage.getItem('cm_ghtoken')||'';tombs=JSON.parse(localStorage.getItem('cm_tombs')||'{}')}catch(e){}
 function serialize(){return tasks.concat(Object.keys(tombs).map(function(id){return {id:id,del:true,upd:tombs[id]}}))}
 function mergeRemote(list){
@@ -585,6 +617,17 @@ function importHTML(){
 }
 
 var sorting=false,pendingRender=false;
+function textImpHTML(){
+  return '<section class="imp"><h2>Importa da testo</h2><p>Incolla un elenco, una task per riga (vanno bene anche punti elenco, «- [ ]» e numeri). Finiscono in «Da smistare» senza data.</p><div class="r"><select id="txtProj" aria-label="Progetto di destinazione">'+PROJECTS.map(function(p){return '<option value="'+p.id+'"'+(p.id==='nothing'?' selected':'')+'>'+esc(p.name)+'</option>'}).join('')+'</select><select id="txtSize" aria-label="Peso"><option value="1">S · 10 XP</option><option value="2" selected>M · 25 XP</option><option value="3">L · 50 XP</option></select></div><textarea id="txtArea" rows="6" placeholder="Chiamare il dentista&#10;Rinnovare abbonamento&#10;- [ ] Comprare cavo USB-C" aria-label="Elenco di task"></textarea><div class="r"><button class="go" data-a="doText">Importa</button><button class="ghost" data-a="closetext">Chiudi</button></div></section>';
+}
+async function doTextImport(){
+  var lines=$('txtArea').value.split(/\r?\n/).map(function(l){return l.replace(/^\s*(?:[-*•▪◦·]\s*)?(?:\[[ xX]?\]\s*)?(?:\d+[.)]\s+)?/,'').trim()}).filter(Boolean);
+  if(!lines.length){toast('Incolla almeno una riga');return}
+  var proj=$('txtProj').value,size=+$('txtSize').value,now=Date.now();
+  showText=false;
+  for(var i=0;i<lines.length;i++)await save({id:uid(),title:lines[i],project:proj,type:'task',date:'',time:'',size:size,done:false,doneAt:null,created:now+i});
+  render();toast(lines.length+(lines.length===1?' task importata':' task importate'));
+}
 function syncHTML(){
   return '<section class="imp"><h2>Sincronizzazione tra dispositivi</h2><p>Le task si salvano in un repo GitHub privato (<b>'+GH_REPO+'</b>). Su ogni dispositivo serve un token personale: GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token, repository access solo su <b>centro-missioni-data</b>, permesso <b>Contents: Read and write</b>. Il token resta solo in questo browser.</p><div class="r"><input type="password" id="ghTok" placeholder="Incolla il token github_pat_…" aria-label="Token GitHub" autocomplete="off" style="flex:1;min-width:220px" value="'+esc(ghToken)+'"><button class="go" data-a="savesync">'+(ghToken?'Aggiorna token':'Collega')+'</button>'+(ghToken?'<button class="ghost" data-a="offsync">Scollega</button>':'')+'<button class="ghost" data-a="closesync">Chiudi</button></div></section>';
 }
@@ -602,13 +645,13 @@ function render(){
   var all=tasks.filter(function(t){return !t.done}).length;
   $('side').innerHTML='<h3>Progetti</h3><button class="pf" data-f="" aria-pressed="'+(!filter)+'"><i class="dot"></i>Tutti<span class="cnt">'+all+'</span></button>'+
     PROJECTS.map(function(p){var n=tasks.filter(function(t){return t.project===p.id&&!t.done}).length;return '<button class="pf" data-f="'+p.id+'" aria-pressed="'+(filter===p.id)+'" style="--pc:var(--c-'+p.id+')"><i class="dot"></i>'+esc(p.name)+'<span class="cnt">'+n+'</span></button>'}).join('')+
-    '<div class="tools"><button class="ghost" data-a="openimp">Importa calendario .ics</button></div>';
+    '<div class="tools"><button class="ghost" data-a="opentext">Importa da testo</button><button class="ghost" data-a="openimp">Importa calendario .ics</button></div>';
 
   var T=[['oggi','Oggi'],['settimana','Settimana'],['progressi','Progressi'],['progetti','Progetti'],['trofei','Trofei']];
   $('tabs').innerHTML=T.map(function(t){return '<button class="tab" role="tab" data-v="'+t[0]+'" aria-selected="'+(view===t[0])+'">'+t[1]+'</button>'}).join('');
 
   var body=view==='settimana'?viewSettimana():view==='progressi'?viewProgressi(s):view==='progetti'?viewProgetti(s):view==='trofei'?viewTrofei(s):viewOggi(s);
-  $('view').innerHTML=(showSync?syncHTML()+'<div style="height:16px"></div>':'')+(showImport?importHTML()+'<div style="height:16px"></div>':'')+body;
+  $('view').innerHTML=(showSync?syncHTML()+'<div style="height:16px"></div>':'')+(showText?textImpHTML()+'<div style="height:16px"></div>':'')+(showImport?importHTML()+'<div style="height:16px"></div>':'')+body;
   if(!col){setGh(ghToken?(ghState==='off'?'ok':ghState):'off')}else $('sync').hidden=true;
 }
 
@@ -662,6 +705,9 @@ document.addEventListener('click',function(e){
   else if(act==='wprev'){weekOff--;render()}
   else if(act==='wnext'){weekOff++;render()}
   else if(act==='wnow'){weekOff=0;render()}
+  else if(act==='opentext'){showText=true;showImport=false;render();var ta=$('txtArea');if(ta)ta.focus()}
+  else if(act==='closetext'){showText=false;render()}
+  else if(act==='doText')doTextImport();
   else if(act==='opensync'){showSync=true;render()}
   else if(act==='closesync'){showSync=false;render()}
   else if(act==='savesync'){var tk=$('ghTok').value.trim();if(!tk){toast('Incolla il token');return}ghToken=tk;try{localStorage.setItem('cm_ghtoken',tk)}catch(x){}showSync=false;ghState='busy';render();ghSync(true).then(function(){if(ghState==='ok')toast('Sync attiva')})}
