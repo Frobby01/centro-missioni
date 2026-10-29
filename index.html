@@ -304,12 +304,42 @@ html{-webkit-text-size-adjust:100%}
 .main>*{min-width:0}
 html{background:var(--bg);min-height:100%}
 body{min-height:100vh;min-height:100dvh}
-.board{display:grid;grid-template-columns:minmax(0,1fr) clamp(360px,30%,520px);gap:14px;height:clamp(460px,calc(100vh - 330px),920px)}
+.board{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,32%,520px);gap:14px;height:clamp(460px,calc(100vh - 330px),920px)}
 @media (min-width:1500px){body{font-size:15px}.shell{grid-template-columns:240px minmax(0,1fr)}}
-@media (max-width:1060px){.board{grid-template-columns:minmax(0,1fr);height:auto}.calbox{overflow:visible}.tl{max-height:460px}.page{max-height:none}}
+/* desktop/tablet: l'app riempie la finestra (nessuna barra di scorrimento di pagina), scorrono solo i pannelli */
+@media (min-width:861px){
+  html,body{height:100%;overflow:hidden}
+  body{padding-bottom:16px}
+  .wrap{height:100%;grid-template-rows:auto minmax(0,1fr)}
+  .shell{min-height:0;align-items:stretch;grid-template-rows:minmax(0,1fr)}
+  .shell>*{min-height:0}
+  .side{position:static;overflow:auto;align-content:start}
+  .main{grid-template-rows:minmax(0,1fr) auto}
+  #view{display:flex;flex-direction:column;gap:14px;min-height:0}
+  #view>.board,#view>.page{flex:1 1 0;min-height:0;height:auto;max-height:none}
+  #view>.imp{flex:none;max-height:40vh;overflow:auto}
+  .focus{flex:none}
+  .add{position:static}
+}
+.fcards{scrollbar-width:thin}
+@media (min-width:861px) and (max-height:820px){
+  .fc{padding:9px;gap:6px}
+  .fc .tt{min-height:0;font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .fc .meta{display:none}
+  .fc .ic{width:28px;height:28px}
+  .fcards{padding-bottom:6px}
+}
+@media (min-width:861px) and (max-height:600px){.focus{display:none}}
+/* trascinamento di task su un altro giorno */
+.row,.mini,.fc,.mt{user-select:none;-webkit-user-select:none}
+.row:not(.dragging),.mini,.fc{cursor:grab}
+body.dnd,body.dnd *{cursor:grabbing!important;user-select:none;-webkit-user-select:none}
+.dragsrc{opacity:.35}
+.dragghost{position:fixed;left:0;top:0;z-index:30;pointer-events:none;max-width:260px;padding:7px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--pc,var(--accent));box-shadow:0 10px 30px -8px rgba(0,0,0,.55);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dropover{outline:2px dashed var(--accent)!important;outline-offset:-2px;background:color-mix(in srgb,var(--accent) 14%,var(--panel2))!important}
 .calbox,.tl,.page{min-height:0;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(20,30,40,.05),0 10px 26px -14px rgba(20,30,40,.22)}
 .calbox{padding:14px}
-.page{padding:14px;max-height:calc(100vh - 330px);min-height:440px}
+.page{padding:14px;max-height:calc(100vh - 330px);min-height:320px}
 .tl{padding:6px 0}
 .tlh{margin:10px 14px 4px;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);display:flex;gap:8px}
 .tlh em{font-style:normal;font-family:var(--mono);color:var(--dim)}
@@ -419,8 +449,8 @@ var RANKS=['Recluta','Apprendista','Pianificatore','Stratega','Capomissione','Ve
 var TYPE_LABEL={task:'Task',mail:'Mail',evento:'Evento'};
 
 var RANGE=[['oggi','Oggi'],['settimana','Sett.'],['mese','Mese'],['anno','Anno'],['vita','Vita']],EXTRA=[['progressi','Progressi'],['progetti','Progetti'],['trofei','Trofei']];
-var lastView='',lastPct=0,tasks=[],col=null,view='oggi',filter=null,weekOff=0,monthOff=0,yearOff=0,curDay='',birth='',showImport=false;
-try{view=localStorage.getItem('cm_view')||'oggi';birth=localStorage.getItem('cm_birth')||''}catch(e){}
+var lastView='',lastPct=0,tasks=[],col=null,view='oggi',filter=null,weekOff=0,monthOff=0,yearOff=0,curDay='',showImport=false;
+try{view=localStorage.getItem('cm_view')||'oggi'}catch(e){}
 if(!RANGE.concat(EXTRA).some(function(t){return t[0]===view}))view='oggi';
 
 function $(id){return document.getElementById(id)}
@@ -530,7 +560,7 @@ function badges(s){
 }
 
 /* ---------- render ---------- */
-function visible(){return tasks.filter(function(t){return !filter||t.project===filter})}
+function visible(){return tasks.filter(function(t){return !t.life&&(!filter||t.project===filter)})}
 function sortT(a,b){return (a.prio==null?1e9:a.prio)-(b.prio==null?1e9:b.prio)||(a.date||'9999').localeCompare(b.date||'9999')||(a.time||'99:99').localeCompare(b.time||'99:99')||(a.created||0)-(b.created||0)}
 var CHECK='<svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.6L10 3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -546,7 +576,7 @@ function rowHTML(t,showDate){
     '<button class="chk" data-a="toggle" aria-label="'+(t.done?'Riapri':'Completa')+': '+esc(t.title)+'">'+CHECK+'</button>'+
     '<div><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta+'</div></div>'+
     '<span class="xp">+'+xpOf(t)+'</span>'+
-    '<div class="acts">'+(t.done?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">fatta ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>')+'<span class="act dt" title="'+(t.done?'Cambia il giorno di completamento':'Segna come fatta in un altro giorno')+'">'+(t.done?'📅 '+esc(fmtDay(t.doneAt||todayStr())):'📅 altro giorno')+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span>'+'<button class="act" data-a="del" title="Elimina">elimina</button></div></div>';
+    '<div class="acts">'+(t.done||t.life?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">✓ ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>')+(t.life&&!t.done?'':'<span class="act dt" title="'+(t.done?'Cambia il giorno di completamento':'Segna come fatta in un altro giorno')+'">'+(t.done?'📅 '+esc(fmtDay(t.doneAt||todayStr())):'📅')+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span>')+'<button class="act" data-a="del" title="Elimina" aria-label="Elimina">✕</button></div></div>';
 }
 function listHTML(arr,showDate){return '<div class="list">'+arr.map(function(t){return rowHTML(t,showDate)}).join('')+'</div>'}
 function secHTML(title,arr,cls,showDate){
@@ -595,7 +625,7 @@ function viewSettimana(){
   var h=navHTML(label,'w')+'<div class="wk">';
   for(var i=0;i<7;i++){
     var d=addDays(mon,i),ds=ymd(d),items=v.filter(function(t){return t.date===ds});
-    h+='<div class="day'+(ds===td?' today':'')+'"><h4><button class="dlink" data-goday="'+ds+'">'+d.toLocaleDateString('it-IT',{weekday:'short'})+' '+d.getDate()+'</button><span class="mono">'+items.length+'</span></h4>';
+    h+='<div class="day'+(ds===td?' today':'')+'" data-drop="'+ds+'"><h4><button class="dlink" data-goday="'+ds+'">'+d.toLocaleDateString('it-IT',{weekday:'short'})+' '+d.getDate()+'</button><span class="mono">'+items.length+'</span></h4>';
     h+=items.map(function(t){return miniHTML(t)}).join('');
     h+='</div>';
   }
@@ -609,7 +639,7 @@ function viewMese(){
     var d=i-off+1;
     if(d<1||d>len){h+='<div class="mc off"></div>';continue}
     var ds=ymd(new Date(y,m,d)),items=v.filter(function(t){return t.date===ds});
-    h+='<button class="mc'+(ds===td?' today':'')+'" data-goday="'+ds+'"><span class="dn">'+d+'</span>'+items.slice(0,3).map(function(t){return '<span class="mt'+(t.done?' done':'')+'" style="--pc:var(--c-'+t.project+')">'+esc(t.title)+'</span>'}).join('')+(items.length>3?'<span class="more">+'+(items.length-3)+'</span>':'')+'</button>';
+    h+='<button class="mc'+(ds===td?' today':'')+'" data-goday="'+ds+'"><span class="dn">'+d+'</span>'+items.slice(0,3).map(function(t){return '<span class="mt'+(t.done?' done':'')+'" data-id="'+esc(t.id)+'" style="--pc:var(--c-'+t.project+')">'+esc(t.title)+'</span>'}).join('')+(items.length>3?'<span class="more">+'+(items.length-3)+'</span>':'')+'</button>';
   }
   return h+'</div>';
 }
@@ -630,20 +660,13 @@ function viewAnno(){
   return h+'</div><div class="meta" style="margin-top:12px">Più scuro = più task in quel giorno (programmate o completate).</div>';
 }
 function viewVita(){
-  if(!birth)return '<section class="imp"><h2>La tua vita in settimane</h2><p>Ogni quadratino è una settimana, da zero a 90 anni. Inserisci la tua data di nascita: resta solo in questo browser.</p><div class="r"><input type="date" id="birthIn" max="'+todayStr()+'" aria-label="Data di nascita"><button class="go" data-a="savebirth">Mostra</button></div></section>';
-  var W7=7*864e5,b=parseYmd(birth),nowW=Math.floor((Date.now()-b.getTime())/W7),total=90*52,done={};
-  tasks.forEach(function(t){if(t.done&&t.doneAt){var w=Math.floor((parseYmd(t.doneAt).getTime()-b.getTime())/W7);done[w]=(done[w]||0)+1}});
-  var step=11,L=26,g='';
-  for(var a=0;a<90;a+=10)g+='<text class="ax" x="0" y="'+(a*step+9)+'">'+a+'</text>';
-  for(var w=0;w<total;w++){
-    var x=L+(w%52)*step,y=Math.floor(w/52)*step,n=done[w]||0,st;
-    if(w===nowW)st='fill:var(--accent)';
-    else if(w<nowW)st=n?'fill:var(--good);fill-opacity:'+Math.min(1,.35+n*.15):'fill:var(--dim);fill-opacity:.35';
-    else st='fill:var(--panel2)';
-    g+='<rect x="'+x+'" y="'+y+'" width="9" height="9" rx="2" style="'+st+'"></rect>';
-  }
-  var pct=Math.max(0,Math.min(100,Math.round(nowW/total*100)));
-  return '<div class="wk-head"><h2>La tua vita in settimane</h2><button class="ghost" data-a="resetbirth">Cambia data</button></div><div class="meta" style="margin-bottom:10px">'+Math.max(0,nowW)+' settimane vissute su '+total+' ('+pct+'%). In verde le settimane con task completate, in arancio questa.</div><div class="life"><svg viewBox="0 0 '+(L+52*step)+' '+(90*step)+'" role="img" aria-label="Le settimane della vita, da 0 a 90 anni">'+g+'</svg></div>';
+  var v=tasks.filter(function(t){return t.life&&(!filter||t.project===filter)}).sort(sortT);
+  var open=v.filter(function(t){return !t.done}),done=v.filter(function(t){return t.done}).sort(function(a,b){return (b.doneAt||'').localeCompare(a.doneAt||'')});
+  var h='<div class="wk-head"><h2>Obiettivi di vita</h2></div><p class="meta" style="margin:0 0 12px">Reminder senza scadenza: cose che vuoi non perdere di vista. Aggiungili dalla barra in basso, trascina per cambiare l’ordine, spunta quando li raggiungi (danno XP come le altre task).</p>';
+  if(!v.length)return h+'<div class="empty"><b>Ancora nessun obiettivo</b>Scrivi il primo nella barra in basso, per esempio «Imparare a suonare il piano».</div>';
+  h+=open.length?listHTML(open,false):'<div class="empty">Nessun obiettivo aperto.</div>';
+  if(done.length)h+='<h2 class="tlh" style="margin-left:0">Raggiunti <em>'+done.length+'</em></h2>'+listHTML(done,false);
+  return h;
 }
 function allTasksHTML(){
   var v=visible().sort(sortT),open=v.filter(function(t){return !t.done});
@@ -655,7 +678,7 @@ function viewProgetti(s){
   var h='<div class="pgrid">';
   PROJECTS.forEach(function(p){
     var st=s.per[p.id],pct=st.total?Math.round(st.done/st.total*100):0;
-    var open=tasks.filter(function(t){return t.project===p.id&&!t.done}).sort(sortT).slice(0,5);
+    var open=tasks.filter(function(t){return !t.life&&t.project===p.id&&!t.done}).sort(sortT).slice(0,5);
     h+='<div class="pcard" style="--pc:var(--c-'+p.id+')"><header><i class="dot"></i><div><h3>'+esc(p.name)+'</h3><small>'+esc(p.sub)+'</small></div><span class="pct">'+pct+'%</span></header><div class="bar"><i style="width:'+pct+'%"></i></div>';
     h+='<div class="meta mono">'+st.done+' / '+st.total+' completate</div>';
     h+=open.length?'<ul>'+open.map(function(t){return '<li><span>'+esc(t.title)+'</span><span class="mono">'+(t.date?esc(fmtDay(t.date)):'—')+'</span></li>'}).join('')+'</ul>':'<div class="meta">Nessuna task aperta.</div>';
@@ -781,18 +804,20 @@ function render(){
   $('streak').title='Il tuo record di giorni consecutivi con almeno una task completata';
   $('streak').innerHTML=flame+'<div><b>'+s.best+'</b> <span>'+(s.best===1?'giorno':'giorni')+' record</span></div>';
 
-  var all=tasks.filter(function(t){return !t.done}).length;
+  var all=tasks.filter(function(t){return !t.life&&!t.done}).length;
   $('side').innerHTML='<h3>Progetti</h3><button class="pf" data-f="" aria-pressed="'+(!filter)+'"><i class="dot"></i>Tutti<span class="cnt">'+all+'</span></button>'+
-    PROJECTS.map(function(p){var n=tasks.filter(function(t){return t.project===p.id&&!t.done}).length;return '<button class="pf" data-f="'+p.id+'" aria-pressed="'+(filter===p.id)+'" style="--pc:var(--c-'+p.id+')"><i class="dot"></i>'+esc(p.name)+'<span class="cnt">'+n+'</span></button>'}).join('')+
+    PROJECTS.map(function(p){var n=tasks.filter(function(t){return !t.life&&t.project===p.id&&!t.done}).length;return '<button class="pf" data-f="'+p.id+'" aria-pressed="'+(filter===p.id)+'" style="--pc:var(--c-'+p.id+')"><i class="dot"></i>'+esc(p.name)+'<span class="cnt">'+n+'</span></button>'}).join('')+
     '<div class="tools"><button class="ghost" data-a="opentext">Importa da testo</button><button class="ghost" data-a="openimp">Importa calendario .ics</button></div>';
 
+  $('addDate').hidden=view==='vita';
+  $('addTitle').placeholder=view==='vita'?'Nuovo obiettivo di vita…':'Nuova task…';
   var tabs=function(T){return T.map(function(t){return '<button class="tab" role="tab" data-v="'+t[0]+'" aria-selected="'+(view===t[0])+'">'+t[1]+'</button>'}).join('')};
   $('tabsR').innerHTML=tabs(RANGE);$('tabsX').innerHTML=tabs(EXTRA);
 
-  var main=view==='progressi'?viewProgressi(s):view==='progetti'?viewProgetti(s):view==='trofei'?viewTrofei(s):null;
+  var main=view==='progressi'?viewProgressi(s):view==='progetti'?viewProgetti(s):view==='trofei'?viewTrofei(s):view==='vita'?viewVita():null;
   if(main===null){
-    var cal=view==='settimana'?viewSettimana():view==='mese'?viewMese():view==='anno'?viewAnno():view==='vita'?viewVita():viewGiorno();
-    main='<div class="board"><section class="calbox">'+cal+'</section><aside class="tl" aria-label="Tutte le task">'+allTasksHTML()+'</aside></div>';
+    var cal=view==='settimana'?viewSettimana():view==='mese'?viewMese():view==='anno'?viewAnno():viewGiorno();
+    main='<div class="board"><section class="calbox"'+(view==='oggi'?' data-drop="'+(curDay||todayStr())+'"':'')+'>'+cal+'</section><aside class="tl" aria-label="Tutte le task">'+allTasksHTML()+'</aside></div>';
   }else main='<div class="page">'+main+'</div>';
   var keep=lastView===view?[].map.call(document.querySelectorAll('.calbox,.tl,.page'),function(el){return el.scrollTop}):[];lastView=view;
   $('view').innerHTML=(showSync?syncHTML()+'<div style="height:16px"></div>':'')+(showText?textImpHTML()+'<div style="height:16px"></div>':'')+(showImport?importHTML()+'<div style="height:16px"></div>':'')+main+focusHTML(visible(),s);
@@ -878,8 +903,6 @@ document.addEventListener('click',function(e){
   else if(act==='yprev'){yearOff--;render()}
   else if(act==='ynext'){yearOff++;render()}
   else if(act==='ynow'){yearOff=0;render()}
-  else if(act==='savebirth'){var bv=$('birthIn').value;if(!bv){toast('Scegli la data di nascita');return}birth=bv;try{localStorage.setItem('cm_birth',bv)}catch(x){}render()}
-  else if(act==='resetbirth'){birth='';try{localStorage.removeItem('cm_birth')}catch(x){}render()}
   else if(act==='opentext'){showText=true;showImport=false;textLines=null;render();var ta=$('txtArea');if(ta)ta.focus()}
   else if(act==='closetext'){showText=false;textLines=null;textDraft='';render()}
   else if(act==='textnext')textNext();
@@ -934,12 +957,61 @@ document.addEventListener('pointerdown',function(e){
   g.addEventListener('pointermove',move);g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
 });
 
+/* ---------- sposta una task su un altro giorno: trascina riga, scheda o voce di calendario (mouse; touch con pressione lunga) ---------- */
+var dragBlock=0;
+document.addEventListener('click',function(e){if(Date.now()<dragBlock){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('pointerdown',function(e){
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  var src=e.target.closest('.row[data-id],.mini[data-id],.fc[data-id],.mt[data-id]');if(!src)return;
+  var bad=e.target.closest('button,input,select,a,[data-grip],.dt');if(bad&&src.contains(bad))return;
+  var t=find(src.dataset.id);if(!t||t.life)return;
+  var sx=e.clientX,sy=e.clientY,x=sx,y=sy,started=false,timer=0,ghost=null,over=null,navA=null,navT=0,touch=e.pointerType!=='mouse';
+  function pos(){ghost.style.transform='translate('+(x+12)+'px,'+(y+12)+'px)'}
+  function setOver(el){if(el===over)return;if(over)over.classList.remove('dropover');over=el;if(over)over.classList.add('dropover')}
+  function nav(a){
+    if(a===navA)return;navA=a;clearInterval(navT);
+    if(a)navT=setInterval(function(){var b=document.querySelector('[data-a="'+a+'"]');if(b){sorting=false;b.click();sorting=true}},700);
+  }
+  function begin(){
+    started=true;sorting=true;document.body.classList.add('dnd');src.classList.add('dragsrc');
+    ghost=document.createElement('div');ghost.className='dragghost';ghost.style.setProperty('--pc','var(--c-'+t.project+')');ghost.textContent=t.title;document.body.appendChild(ghost);pos();
+  }
+  function tm(ev){if(started)ev.preventDefault()}
+  function finish(){
+    clearTimeout(timer);clearInterval(navT);
+    document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',cancel);document.removeEventListener('touchmove',tm);
+    if(started){document.body.classList.remove('dnd');src.classList.remove('dragsrc');if(ghost)ghost.remove();setOver(null);sorting=false;dragBlock=Date.now()+80}
+  }
+  function move(ev){
+    x=ev.clientX;y=ev.clientY;
+    if(!started){if(Math.hypot(x-sx,y-sy)<=(touch?10:6))return;if(touch){finish();return}begin()}
+    pos();
+    var el=document.elementFromPoint(x,y);
+    setOver(dropAt(el));
+    var nv=el&&el.closest('[data-a]');nav(nv&&/^[dwmy](prev|next)$/.test(nv.dataset.a)?nv.dataset.a:null);
+  }
+  function dropAt(el){return el&&(el.closest('[data-drop]')||el.closest('[data-goday]'))}
+  async function up(ev){
+    var was=started,d=was?dropAt(document.elementFromPoint(ev.clientX,ev.clientY)):null;finish();
+    if(was&&d){
+      var ds=d.dataset.drop||d.dataset.goday;
+      if(ds!==t.date){await save(Object.assign({},t,{date:ds}));toast('Spostata a '+fmtDay(ds))}
+    }
+    if(was&&pendingRender){pendingRender=false;render()}
+  }
+  function cancel(){var was=started;finish();if(was&&pendingRender){pendingRender=false;render()}}
+  document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',cancel);document.addEventListener('touchmove',tm,{passive:false});
+  if(touch)timer=setTimeout(begin,380);
+});
+
 $('addDate').value=todayStr();
 $('addForm').addEventListener('submit',function(e){
   e.preventDefault();
   var title=$('addTitle').value.trim();if(!title)return;
-  save({id:uid(),title:title,project:$('addProj').value,type:'task',date:$('addDate').value||'',time:'',size:+$('addSize').value,done:false,doneAt:null,created:Date.now()});
-  $('addTitle').value='';$('addTitle').focus();toast('Aggiunta');
+  var life=view==='vita',t={id:uid(),title:title,project:$('addProj').value,type:'task',date:life?'':$('addDate').value||'',time:'',size:+$('addSize').value,done:false,doneAt:null,created:Date.now()};
+  if(life)t.life=true;
+  save(t);
+  $('addTitle').value='';$('addTitle').focus();toast(life?'Obiettivo aggiunto':'Aggiunta');
 });
 $('addProj').innerHTML=PROJECTS.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>'}).join('');
 
