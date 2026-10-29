@@ -25,7 +25,7 @@ body{background:radial-gradient(900px 420px at 10% -8%,color-mix(in srgb,var(--a
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.wrap{max-width:1180px;margin:0 auto;display:grid;gap:18px}
+.wrap{max-width:1760px;margin:0 auto;display:grid;gap:18px}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
 /* header */
@@ -302,16 +302,21 @@ html{-webkit-text-size-adjust:100%}
 .hud{display:grid;grid-template-columns:auto auto;gap:8px;margin-left:auto;align-items:stretch}
 .hud #sync{grid-column:1/-1;padding:5px 10px;text-align:center}
 .main>*{min-width:0}
-.board{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:14px;height:clamp(440px,calc(100vh - 380px),680px)}
+html{background:var(--bg);min-height:100%}
+body{min-height:100vh;min-height:100dvh}
+.board{display:grid;grid-template-columns:minmax(0,1fr) clamp(360px,30%,520px);gap:14px;height:clamp(460px,calc(100vh - 330px),920px)}
+@media (min-width:1500px){body{font-size:15px}.shell{grid-template-columns:240px minmax(0,1fr)}}
+@media (max-width:1060px){.board{grid-template-columns:minmax(0,1fr);height:auto}.calbox{overflow:visible}.tl{max-height:460px}.page{max-height:none}}
 .calbox,.tl,.page{min-height:0;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(20,30,40,.05),0 10px 26px -14px rgba(20,30,40,.22)}
 .calbox{padding:14px}
-.page{padding:14px;max-height:calc(100vh - 380px);min-height:440px}
+.page{padding:14px;max-height:calc(100vh - 330px);min-height:440px}
 .tl{padding:6px 0}
 .tlh{margin:10px 14px 4px;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);display:flex;gap:8px}
 .tlh em{font-style:normal;font-family:var(--mono);color:var(--dim)}
 .tl .list{border:0;border-radius:0;box-shadow:none;background:none}
 .tl .row{grid-template-columns:auto auto minmax(0,1fr) auto;position:relative}
-.tl .acts{grid-column:3/-1}
+.tl .acts{grid-column:3/-1;flex-wrap:wrap}
+.act{white-space:nowrap}
 .tl .empty{margin:10px 14px}
 @media (hover:hover) and (min-width:861px){
   .tl .acts{position:absolute;right:8px;top:50%;transform:translateY(-50%);grid-column:auto;background:var(--panel2);box-shadow:0 0 0 1px var(--line);border-radius:8px;padding:2px}
