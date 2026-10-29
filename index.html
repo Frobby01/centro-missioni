@@ -60,7 +60,7 @@ button{cursor:pointer}
 .main{display:grid;gap:16px;min-width:0}
 
 /* add bar */
-.add{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto auto;gap:8px;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.add{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;gap:8px;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
 .add input,.add select,.imp input,.imp select{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
 .add input[type=text]{border-color:transparent;background:transparent;font-size:15px;padding-left:4px}
 .add .go{background:var(--accent);color:var(--accent-fg);border:0;border-radius:6px;padding:8px 16px;font-weight:600}
@@ -97,6 +97,8 @@ button{cursor:pointer}
 @media (hover:none){.acts{opacity:1}}
 .act{background:none;border:0;color:var(--dim);padding:4px 7px;border-radius:5px;font-size:12px}
 .act:hover{background:var(--line);color:var(--fg)}
+.dt{position:relative;display:inline-block;overflow:hidden;cursor:pointer;white-space:nowrap}
+.dt input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
 /* riordino per priorità (trascina la maniglia ⋮⋮) */
 .grip{width:18px;height:28px;display:grid;place-items:center;background:none;border:0;padding:0;color:var(--dim);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font:700 14px/1 var(--mono);letter-spacing:-2px;border-radius:5px}
 .grip:hover{color:var(--fg);background:var(--line)}
@@ -293,31 +295,102 @@ html{-webkit-text-size-adjust:100%}
   .toast{white-space:normal;text-align:center}
 }
 @media (max-width:380px){.logo{width:32px;height:32px}.top h1{font-size:18px}.wk{grid-template-columns:minmax(0,1fr)}}
+/* layout a schema: header con tab di periodo e pagine, calendario + lista task affiancati, "Per te oggi" e barra nuova task sotto */
+.top{display:flex;flex-wrap:wrap;gap:12px 14px;align-items:flex-start;justify-content:flex-start}
+.brand{width:210px}
+.top>.tabs{align-self:center}
+.hud{display:grid;grid-template-columns:auto auto;gap:8px;margin-left:auto;align-items:stretch}
+.hud #sync{grid-column:1/-1;padding:5px 10px;text-align:center}
+.main>*{min-width:0}
+.board{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:14px;height:clamp(440px,calc(100vh - 380px),680px)}
+.calbox,.tl,.page{min-height:0;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(20,30,40,.05),0 10px 26px -14px rgba(20,30,40,.22)}
+.calbox{padding:14px}
+.page{padding:14px;max-height:calc(100vh - 380px);min-height:440px}
+.tl{padding:6px 0}
+.tlh{margin:10px 14px 4px;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mut);display:flex;gap:8px}
+.tlh em{font-style:normal;font-family:var(--mono);color:var(--dim)}
+.tl .list{border:0;border-radius:0;box-shadow:none;background:none}
+.tl .row{grid-template-columns:auto auto minmax(0,1fr) auto;position:relative}
+.tl .acts{grid-column:3/-1}
+.tl .empty{margin:10px 14px}
+@media (hover:hover) and (min-width:861px){
+  .tl .acts{position:absolute;right:8px;top:50%;transform:translateY(-50%);grid-column:auto;background:var(--panel2);box-shadow:0 0 0 1px var(--line);border-radius:8px;padding:2px}
+  .tl .row:hover .xp{visibility:hidden}
+}
+.calbox .sec{margin-bottom:14px}
+.calbox .wk{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}
+.calbox .wk-head{margin-bottom:12px}
+.calbox .wk-head h2{text-transform:capitalize}
+.dlink{background:none;border:0;padding:0;color:inherit;font:inherit;text-transform:inherit;letter-spacing:inherit;cursor:pointer}
+.dlink:hover{text-decoration:underline}
+.hrs{display:grid}
+.hr{display:grid;grid-template-columns:48px minmax(0,1fr);gap:8px;border-top:1px solid var(--line);padding:6px 0}
+.hr>span{color:var(--dim);font:12px var(--mono);padding-top:4px}
+.hr>div{display:grid;gap:4px}
+.calbox .sec>.mini{margin-bottom:0}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mh{font:500 11px var(--mono);text-transform:uppercase;color:var(--dim);text-align:center;padding:2px}
+.mc{display:grid;gap:2px;align-content:start;min-height:84px;padding:5px;background:var(--panel2);border:1px solid transparent;border-radius:8px;text-align:left;min-width:0;overflow:hidden;font:inherit;color:inherit}
+.mc:hover{border-color:var(--dim)}
+.mc.today{border-color:var(--accent)}
+.mc.off{background:none;pointer-events:none}
+.mc .dn{font:500 12px var(--mono);color:var(--mut)}
+.mc.today .dn{color:var(--accent);font-weight:600}
+.mt{font-size:11px;line-height:1.3;padding:1px 5px;border-radius:4px;background:color-mix(in srgb,var(--pc,var(--dim)) 22%,transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt.done{text-decoration:line-through;color:var(--dim)}
+.more{font:11px var(--mono);color:var(--dim)}
+.ygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.ym{display:grid;gap:6px;align-content:start}
+.ymh{background:none;border:0;padding:0;text-align:left;font-weight:600;text-transform:capitalize;color:var(--fg)}
+.ymh:hover{color:var(--accent)}
+.yd{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.yd i{aspect-ratio:1}
+.yc{aspect-ratio:1;padding:0;border:0;border-radius:3px;background:var(--panel2)}
+.yc.n{background:color-mix(in srgb,var(--accent) calc(var(--lv)*1%),var(--panel2))}
+.yc.today{outline:1.5px solid var(--accent);outline-offset:1px}
+.yc:hover{outline:1.5px solid var(--dim)}
+.life svg{width:100%;max-width:640px}
+.fhead{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.fhead .pill{margin:0}
+.qline{font-size:12px;color:var(--mut)}
+.add{position:sticky;bottom:12px;z-index:4}
+@media (max-width:860px){
+  .brand{width:auto}
+  .top>.tabs{align-self:flex-start}
+  .hud{margin-left:0;width:100%}
+  .board{grid-template-columns:minmax(0,1fr);height:auto}
+  .calbox{overflow:visible}
+  .tl{max-height:440px}
+  .page{max-height:none;min-height:0}
+  .add{position:static}
+  .mc{min-height:58px}
+  .mt{display:none}
+}
 </style>
 
 <div class="wrap">
   <header class="top">
-    <div><h1><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>Centro Missioni</h1><div class="date" id="today"></div></div>
+    <div class="brand"><h1><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>Centro Missioni</h1><div class="date" id="today"></div></div>
+    <div class="tabs" role="tablist" id="tabsR" aria-label="Periodo"></div>
+    <div class="tabs" role="tablist" id="tabsX" aria-label="Pagine"></div>
     <div class="hud">
       <div class="lvl" id="lvl"></div>
       <div class="streak" id="streak"></div>
-      <button class="ghost" id="sync" data-a="opensync" style="align-self:center"></button>
+      <button class="ghost" id="sync" data-a="opensync"></button>
     </div>
   </header>
 
   <div class="shell">
     <nav class="side" id="side" aria-label="Progetti"></nav>
     <main class="main">
+      <div id="view"></div>
       <form class="add" id="addForm" autocomplete="off">
-        <input type="text" id="addTitle" placeholder="Nuova task, evento o mail da gestire…" aria-label="Titolo" required>
+        <input type="text" id="addTitle" placeholder="Nuova task…" aria-label="Titolo" required>
         <select id="addProj" aria-label="Progetto"></select>
-        <select id="addType" aria-label="Tipo"><option value="task">Task</option><option value="mail">Mail</option><option value="evento">Evento</option></select>
         <input type="date" id="addDate" aria-label="Data">
         <select id="addSize" aria-label="Peso"><option value="1">S · 10 XP</option><option value="2" selected>M · 25 XP</option><option value="3">L · 50 XP</option></select>
         <button class="go" type="submit">Aggiungi</button>
       </form>
-      <div class="tabs" role="tablist" id="tabs"></div>
-      <div id="view"></div>
     </main>
   </div>
 </div>
@@ -332,8 +405,7 @@ var PROJECTS=[
   {id:'giochi',name:'Game Dev',sub:'Sviluppo dei miei giochi'},
   {id:'cinic',name:'Cinic Games',sub:'Cinic Games'},
   {id:'vgi',name:'Videogiochitalia.it',sub:'Videogiochitalia.it'},
-  {id:'nothing',name:'Nothing Essentials',sub:'Note e to-do da Essential Space'},
-  {id:'personale',name:'Personale',sub:'Proton Calendar · Proton Mail'}
+  {id:'personale',name:'Altro',sub:'Proton Calendar · Proton Mail · varie'}
 ];
 var PM={};PROJECTS.forEach(function(p){PM[p.id]=p});
 var SIZE_XP={1:10,2:25,3:50};
@@ -341,8 +413,10 @@ var QUEST_N=3,QUEST_XP=20;
 var RANKS=['Recluta','Apprendista','Pianificatore','Stratega','Capomissione','Veterano','Leggenda'];
 var TYPE_LABEL={task:'Task',mail:'Mail',evento:'Evento'};
 
-var lastPct=0,tasks=[],col=null,view='oggi',filter=null,weekOff=0,showImport=false;
-try{view=localStorage.getItem('cm_view')||'oggi'}catch(e){}
+var RANGE=[['oggi','Oggi'],['settimana','Sett.'],['mese','Mese'],['anno','Anno'],['vita','Vita']],EXTRA=[['progressi','Progressi'],['progetti','Progetti'],['trofei','Trofei']];
+var lastView='',lastPct=0,tasks=[],col=null,view='oggi',filter=null,weekOff=0,monthOff=0,yearOff=0,curDay='',birth='',showImport=false;
+try{view=localStorage.getItem('cm_view')||'oggi';birth=localStorage.getItem('cm_birth')||''}catch(e){}
+if(!RANGE.concat(EXTRA).some(function(t){return t[0]===view}))view='oggi';
 
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
@@ -445,7 +519,7 @@ function badges(s){
     {k:'p4',n:'Game dev in azione',d:'5 task Game Dev chiuse',v:s.per.giochi.done,t:5,ico:'GD',c:'giochi'},
     {k:'p6',n:'Cinic in marcia',d:'5 task Cinic Games chiuse',v:s.per.cinic.done,t:5,ico:'CG',c:'cinic'},
     {k:'p7',n:'Redazione operativa',d:'5 task Videogiochitalia.it chiuse',v:s.per.vgi.done,t:5,ico:'VI',c:'vgi'},
-    {k:'p5',n:'Vita in ordine',d:'5 task personali chiuse',v:s.per.personale.done,t:5,ico:'PE',c:'personale'}
+    {k:'p5',n:'Vita in ordine',d:'5 task Altro chiuse',v:s.per.personale.done,t:5,ico:'PE',c:'personale'}
   ];
   b.forEach(function(x){x.on=x.v>=x.t});return b;
 }
@@ -456,7 +530,7 @@ function sortT(a,b){return (a.prio==null?1e9:a.prio)-(b.prio==null?1e9:b.prio)||
 var CHECK='<svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.6L10 3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 function rowHTML(t,showDate){
-  var p=PM[t.project]||PROJECTS[4];
+  var p=PM[t.project]||PM.personale;
   var meta='<span class="chip"><i class="dot" style="--pc:var(--c-'+p.id+')"></i>'+esc(p.name)+'</span>';
   if(t.type!=='task')meta+='<span class="tag">'+TYPE_LABEL[t.type]+'</span>';
   if(showDate&&t.date)meta+='<span>'+esc(fmtDay(t.date))+'</span>';
@@ -467,7 +541,7 @@ function rowHTML(t,showDate){
     '<button class="chk" data-a="toggle" aria-label="'+(t.done?'Riapri':'Completa')+': '+esc(t.title)+'">'+CHECK+'</button>'+
     '<div><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta+'</div></div>'+
     '<span class="xp">+'+xpOf(t)+'</span>'+
-    '<div class="acts">'+(t.done?'':'<button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>')+'<button class="act" data-a="del" title="Elimina">elimina</button></div></div>';
+    '<div class="acts">'+(t.done?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">fatta ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>')+'<span class="act dt" title="'+(t.done?'Cambia il giorno di completamento':'Segna come fatta in un altro giorno')+'">'+(t.done?'📅 '+esc(fmtDay(t.doneAt||todayStr())):'📅 altro giorno')+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span>'+'<button class="act" data-a="del" title="Elimina">elimina</button></div></div>';
 }
 function listHTML(arr,showDate){return '<div class="list">'+arr.map(function(t){return rowHTML(t,showDate)}).join('')+'</div>'}
 function secHTML(title,arr,cls,showDate){
@@ -475,50 +549,102 @@ function secHTML(title,arr,cls,showDate){
   return '<section class="sec"><h2 class="'+(cls||'')+'">'+title+' <em>'+arr.length+'</em></h2>'+listHTML(arr,showDate)+'</section>';
 }
 
-function focusHTML(v){
-  var td=todayStr();
+function focusHTML(v,s){
+  var td=todayStr(),dn=Math.min(QUEST_N,s.byDay[td]||0);
   var pick=v.filter(function(t){return !t.done&&(!t.date||t.date<=td)}).sort(function(a,b){return (a.prio==null?1e9:a.prio)-(b.prio==null?1e9:b.prio)||(a.date||'9999').localeCompare(b.date||'9999')||xpOf(b)-xpOf(a)}).slice(0,6);
   var doneToday=v.filter(function(t){return t.done&&t.doneAt===td}).slice(0,2);
   var all=pick.concat(doneToday);
   if(!all.length)return '';
-  return '<section class="focus"><span class="pill" style="width:max-content">Per te oggi</span><div class="fcards">'+all.map(function(t){
-    var p=PM[t.project]||PROJECTS[4];
+  return '<section class="focus"><div class="fhead"><span class="pill">Per te oggi</span><span class="mono qline" title="Completa '+QUEST_N+' task oggi per +'+QUEST_XP+' XP bonus">Missione '+dn+'/'+QUEST_N+(dn>=QUEST_N?' · +'+QUEST_XP+' XP':'')+'</span></div><div class="fcards">'+all.map(function(t){
+    var p=PM[t.project]||PM.personale;
     return '<div class="fc'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><div class="ft"><span class="ic">'+esc(p.name.slice(0,2).toUpperCase())+'</span><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button></div><div class="tt">'+esc(t.title)+'</div><div class="meta"><span>'+esc(p.name)+'</span><span class="mono">+'+xpOf(t)+' XP</span>'+(t.date&&t.date<td?'<span class="tag" style="color:var(--bad)">in ritardo</span>':'')+'</div></div>';
   }).join('')+'</div></section>';
 }
-function viewOggi(s){
-  var td=todayStr(),v=visible().sort(sortT);
-  var late=v.filter(function(t){return !t.done&&t.date&&t.date<td});
-  var today=v.filter(function(t){return t.date===td});
-  var inbox=v.filter(function(t){return !t.done&&!t.date});
-  var soon=v.filter(function(t){return !t.done&&t.date>td&&t.date<=ymd(addDays(new Date(),7))});
-  var dn=s.byDay[td]||0,pips='';
-  for(var i=0;i<QUEST_N;i++)pips+='<span class="pip'+(i<dn?' on':'')+'"></span>';
-  var html='<div class="quest"><div><span class="pill">Daily quest</span><h2>Missione del giorno</h2><p>'+(dn>=QUEST_N?'Completata. Ogni task in più è XP extra.':'Completa '+QUEST_N+' task oggi: ne mancano '+(QUEST_N-dn)+'.')+'</p></div><div class="pips">'+pips+'</div><span class="reward">'+(dn>=QUEST_N?'+'+QUEST_XP+' XP ottenuti':'+'+QUEST_XP+' XP bonus')+'</span></div>';
-  if(!tasks.length){
-    html+='<div class="empty"><b>Ancora nessuna task</b>Aggiungine una dalla barra qui sopra, importa un calendario .ics oppure parti da alcuni esempi.<br><button class="ghost" data-a="examples">Carica esempi</button></div>';
-    return html;
+function miniHTML(t,showDate){
+  var p=PM[t.project]||PM.personale;
+  return '<div class="mini'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button><div><div class="ttl">'+esc(t.title)+'</div><div class="t">'+(showDate&&t.date?esc(fmtDay(t.date))+' · ':'')+(t.time?esc(t.time)+' · ':'')+esc(p.name)+(t.type!=='task'?' · '+TYPE_LABEL[t.type]:'')+'</div></div></div>';
+}
+function navHTML(label,a){return '<div class="wk-head"><h2>'+label+'</h2><button class="ghost" data-a="'+a+'prev" aria-label="Precedente">←</button><button class="ghost" data-a="'+a+'now">Oggi</button><button class="ghost" data-a="'+a+'next" aria-label="Successivo">→</button></div>'}
+function viewGiorno(){
+  var td=todayStr(),ds=curDay||td,v=visible().sort(sortT);
+  var items=v.filter(function(t){return t.date===ds}),late=ds===td?v.filter(function(t){return !t.done&&t.date&&t.date<td}):[];
+  var untimed=items.filter(function(t){return !t.time}),timed=items.filter(function(t){return t.time});
+  var h=navHTML(parseYmd(ds).toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'d');
+  if(late.length)h+='<section class="sec"><h2 class="late">In ritardo <em>'+late.length+'</em></h2>'+late.map(function(t){return miniHTML(t,true)}).join('')+'</section>';
+  if(!items.length&&!late.length)return h+'<div class="empty"><b>Niente in programma</b>Aggiungi una task dalla barra in basso o scegli un altro giorno.</div>';
+  if(untimed.length)h+='<section class="sec"><h2>Durante la giornata <em>'+untimed.length+'</em></h2>'+untimed.map(function(t){return miniHTML(t)}).join('')+'</section>';
+  if(timed.length){
+    h+='<section class="sec"><h2>Con orario <em>'+timed.length+'</em></h2><div class="hrs">';
+    for(var hr=6;hr<=23;hr++){
+      var at=timed.filter(function(t){return Math.min(23,Math.max(6,parseInt(t.time,10)||0))===hr});
+      if(at.length)h+='<div class="hr"><span>'+pad(hr)+':00</span><div>'+at.map(function(t){return miniHTML(t)}).join('')+'</div></div>';
+    }
+    h+='</div></section>';
   }
-  html+=focusHTML(v)+week7HTML()+secHTML('In ritardo',late,'late',true)+secHTML('Oggi',today.filter(function(t){return true}),'',false);
-  if(!today.length)html+='<div class="empty"><b>Niente in programma oggi</b>Aggiungi una task o prendi qualcosa dalla lista qui sotto.</div>';
-  html+=secHTML('Prossimi 7 giorni',soon,'',true)+secHTML('Da smistare (senza data)',inbox,'',false);
-  return html;
+  return h;
 }
 function viewSettimana(){
   var mon=new Date();var dow=(mon.getDay()+6)%7;mon=addDays(mon,-dow+weekOff*7);
   var v=visible().sort(sortT),td=todayStr();
   var label=mon.toLocaleDateString('it-IT',{day:'numeric',month:'short'})+' – '+addDays(mon,6).toLocaleDateString('it-IT',{day:'numeric',month:'short'});
-  var h='<div class="wk-head"><h2>'+label+'</h2><button class="ghost" data-a="wprev">←</button><button class="ghost" data-a="wnow">Oggi</button><button class="ghost" data-a="wnext">→</button></div><div class="wk">';
+  var h=navHTML(label,'w')+'<div class="wk">';
   for(var i=0;i<7;i++){
     var d=addDays(mon,i),ds=ymd(d),items=v.filter(function(t){return t.date===ds});
-    h+='<div class="day'+(ds===td?' today':'')+'"><h4><span>'+d.toLocaleDateString('it-IT',{weekday:'short'})+' '+d.getDate()+'</span><span class="mono">'+items.length+'</span></h4>';
-    h+=items.map(function(t){
-      var p=PM[t.project]||PROJECTS[4];
-      return '<div class="mini'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button><div><div class="ttl">'+esc(t.title)+'</div><div class="t">'+(t.time?esc(t.time)+' · ':'')+esc(p.name)+(t.type!=='task'?' · '+TYPE_LABEL[t.type]:'')+'</div></div></div>';
-    }).join('');
+    h+='<div class="day'+(ds===td?' today':'')+'"><h4><button class="dlink" data-goday="'+ds+'">'+d.toLocaleDateString('it-IT',{weekday:'short'})+' '+d.getDate()+'</button><span class="mono">'+items.length+'</span></h4>';
+    h+=items.map(function(t){return miniHTML(t)}).join('');
     h+='</div>';
   }
   return h+'</div>';
+}
+function viewMese(){
+  var now=new Date(),base=new Date(now.getFullYear(),now.getMonth()+monthOff,1),y=base.getFullYear(),m=base.getMonth();
+  var off=(base.getDay()+6)%7,len=new Date(y,m+1,0).getDate(),td=todayStr(),v=visible().sort(sortT);
+  var h=navHTML(base.toLocaleDateString('it-IT',{month:'long',year:'numeric'}),'m')+'<div class="mgrid">'+['Lun','Mar','Mer','Gio','Ven','Sab','Dom'].map(function(n){return '<div class="mh">'+n+'</div>'}).join('');
+  for(var i=0;i<Math.ceil((off+len)/7)*7;i++){
+    var d=i-off+1;
+    if(d<1||d>len){h+='<div class="mc off"></div>';continue}
+    var ds=ymd(new Date(y,m,d)),items=v.filter(function(t){return t.date===ds});
+    h+='<button class="mc'+(ds===td?' today':'')+'" data-goday="'+ds+'"><span class="dn">'+d+'</span>'+items.slice(0,3).map(function(t){return '<span class="mt'+(t.done?' done':'')+'" style="--pc:var(--c-'+t.project+')">'+esc(t.title)+'</span>'}).join('')+(items.length>3?'<span class="more">+'+(items.length-3)+'</span>':'')+'</button>';
+  }
+  return h+'</div>';
+}
+function viewAnno(){
+  var now=new Date(),yr=now.getFullYear()+yearOff,td=todayStr(),v=visible(),cnt={};
+  v.forEach(function(t){if(t.date)cnt[t.date]=(cnt[t.date]||0)+1;if(t.done&&t.doneAt&&t.doneAt!==t.date)cnt[t.doneAt]=(cnt[t.doneAt]||0)+1});
+  var h=navHTML(String(yr),'y')+'<div class="ygrid">';
+  for(var m=0;m<12;m++){
+    var base=new Date(yr,m,1),off=(base.getDay()+6)%7,len=new Date(yr,m+1,0).getDate();
+    h+='<div class="ym"><button class="ymh" data-gomonth="'+((yr-now.getFullYear())*12+m-now.getMonth())+'">'+base.toLocaleDateString('it-IT',{month:'long'})+'</button><div class="yd">';
+    for(var i=0;i<off;i++)h+='<i></i>';
+    for(var d=1;d<=len;d++){
+      var ds=ymd(new Date(yr,m,d)),n=cnt[ds]||0;
+      h+='<button class="yc'+(n?' n':'')+(ds===td?' today':'')+'" style="--lv:'+(n?Math.min(100,25+n*20):0)+'" data-goday="'+ds+'" title="'+esc(fmtDay(ds))+': '+n+'" aria-label="'+esc(fmtDay(ds))+': '+n+' task"></button>';
+    }
+    h+='</div></div>';
+  }
+  return h+'</div><div class="meta" style="margin-top:12px">Più scuro = più task in quel giorno (programmate o completate).</div>';
+}
+function viewVita(){
+  if(!birth)return '<section class="imp"><h2>La tua vita in settimane</h2><p>Ogni quadratino è una settimana, da zero a 90 anni. Inserisci la tua data di nascita: resta solo in questo browser.</p><div class="r"><input type="date" id="birthIn" max="'+todayStr()+'" aria-label="Data di nascita"><button class="go" data-a="savebirth">Mostra</button></div></section>';
+  var W7=7*864e5,b=parseYmd(birth),nowW=Math.floor((Date.now()-b.getTime())/W7),total=90*52,done={};
+  tasks.forEach(function(t){if(t.done&&t.doneAt){var w=Math.floor((parseYmd(t.doneAt).getTime()-b.getTime())/W7);done[w]=(done[w]||0)+1}});
+  var step=11,L=26,g='';
+  for(var a=0;a<90;a+=10)g+='<text class="ax" x="0" y="'+(a*step+9)+'">'+a+'</text>';
+  for(var w=0;w<total;w++){
+    var x=L+(w%52)*step,y=Math.floor(w/52)*step,n=done[w]||0,st;
+    if(w===nowW)st='fill:var(--accent)';
+    else if(w<nowW)st=n?'fill:var(--good);fill-opacity:'+Math.min(1,.35+n*.15):'fill:var(--dim);fill-opacity:.35';
+    else st='fill:var(--panel2)';
+    g+='<rect x="'+x+'" y="'+y+'" width="9" height="9" rx="2" style="'+st+'"></rect>';
+  }
+  var pct=Math.max(0,Math.min(100,Math.round(nowW/total*100)));
+  return '<div class="wk-head"><h2>La tua vita in settimane</h2><button class="ghost" data-a="resetbirth">Cambia data</button></div><div class="meta" style="margin-bottom:10px">'+Math.max(0,nowW)+' settimane vissute su '+total+' ('+pct+'%). In verde le settimane con task completate, in arancio questa.</div><div class="life"><svg viewBox="0 0 '+(L+52*step)+' '+(90*step)+'" role="img" aria-label="Le settimane della vita, da 0 a 90 anni">'+g+'</svg></div>';
+}
+function allTasksHTML(){
+  var v=visible().sort(sortT),open=v.filter(function(t){return !t.done});
+  var done=v.filter(function(t){return t.done}).sort(function(a,b){return (b.doneAt||'').localeCompare(a.doneAt||'')}).slice(0,30);
+  if(!tasks.length)return '<div class="empty"><b>Ancora nessuna task</b>Aggiungine una dalla barra in basso, importa un calendario .ics oppure parti da alcuni esempi.<br><button class="ghost" data-a="examples">Carica esempi</button></div>';
+  return '<h2 class="tlh">Tutte le task <em>'+open.length+'</em></h2>'+(open.length?listHTML(open,true):'<div class="empty">Nessuna task aperta.</div>')+(done.length?'<h2 class="tlh">Completate <em>'+done.length+'</em></h2>'+listHTML(done,true):'');
 }
 function viewProgetti(s){
   var h='<div class="pgrid">';
@@ -608,25 +734,32 @@ function viewProgressi(s){
   h+='<div class="card"><h3>Dove stai lavorando <em>ultimi 30 giorni</em></h3>'+PROJECTS.map(function(p){var n=pc[p.id]||0;return '<div class="hbar" style="--pc:var(--c-'+p.id+')"><span>'+esc(p.name)+'</span><div class="bar"><i style="width:'+Math.round(n/mx*100)+'%"></i></div><span>'+n+'</span></div>'}).join('')+'</div></div></div>';
   return h;
 }
-function week7HTML(){
-  var a=dayAgg(),days=lastDays(7),mx=Math.max.apply(null,days.map(function(d){return a.cnt[d]||0}).concat([3]));
-  return '<div class="w7"><h2>Ultimi 7 giorni</h2><div class="w7bars">'+days.map(function(d,i){var n=a.cnt[d]||0;return '<div class="'+(n?'has ':'')+(i===6?'now':'')+'" title="'+fmtDay(d)+': '+n+' completate"><i style="height:'+Math.round(n/mx*100)+'%"></i><span>'+'DLMMGVS'[parseYmd(d).getDay()]+'</span></div>'}).join('')+'</div></div>';
-}
 function importHTML(){
   return '<section class="imp"><h2>Importa calendario (.ics)</h2><p>Proton Calendar: Impostazioni → Calendari → Esporta (file .ics). Google Calendar: Impostazioni → Importa/esporta → Esporta. Gli eventi diventano voci di tipo Evento nel progetto scelto; gli eventi già importati non si duplicano. Gli eventi ricorrenti entrano solo con la prima occorrenza.</p><div class="r"><select id="impProj" aria-label="Progetto di destinazione">'+PROJECTS.map(function(p){return '<option value="'+p.id+'"'+(p.id==='aisa'?'':'')+'>'+esc(p.name)+'</option>'}).join('')+'</select><input type="file" id="impFile" accept=".ics,text/calendar" aria-label="File .ics"><button class="go" data-a="import">Importa</button><button class="ghost" data-a="closeimp">Chiudi</button></div></section>';
 }
 
-var sorting=false,pendingRender=false;
+var sorting=false,pendingRender=false,textLines=null,textDraft='';
+function sizeOpts(sel){return [[1,'S · 10 XP'],[2,'M · 25 XP'],[3,'L · 50 XP']].map(function(o){return '<option value="'+o[0]+'"'+(o[0]===sel?' selected':'')+'>'+o[1]+'</option>'}).join('')}
+function projOpts(sel){return '<option value="">Scegli progetto…</option>'+PROJECTS.map(function(p){return '<option value="'+p.id+'"'+(p.id===sel?' selected':'')+'>'+esc(p.name)+'</option>'}).join('')}
 function textImpHTML(){
-  return '<section class="imp"><h2>Importa da testo</h2><p>Incolla un elenco, una task per riga (vanno bene anche punti elenco, «- [ ]» e numeri). Finiscono in «Da smistare» senza data.</p><div class="r"><select id="txtProj" aria-label="Progetto di destinazione">'+PROJECTS.map(function(p){return '<option value="'+p.id+'"'+(p.id==='nothing'?' selected':'')+'>'+esc(p.name)+'</option>'}).join('')+'</select><select id="txtSize" aria-label="Peso"><option value="1">S · 10 XP</option><option value="2" selected>M · 25 XP</option><option value="3">L · 50 XP</option></select></div><textarea id="txtArea" rows="6" placeholder="Chiamare il dentista&#10;Rinnovare abbonamento&#10;- [ ] Comprare cavo USB-C" aria-label="Elenco di task"></textarea><div class="r"><button class="go" data-a="doText">Importa</button><button class="ghost" data-a="closetext">Chiudi</button></div></section>';
+  if(!textLines)return '<section class="imp"><h2>Importa da testo</h2><p>Incolla un elenco, una task per riga (vanno bene anche punti elenco, «- [ ]» e numeri). Nel passo dopo scegli tu progetto e peso di ogni riga. Le task finiscono in «Da smistare» senza data.</p><textarea id="txtArea" rows="6" placeholder="Chiamare il dentista&#10;Rinnovare abbonamento&#10;- [ ] Comprare cavo USB-C" aria-label="Elenco di task">'+esc(textDraft)+'</textarea><div class="r"><button class="go" data-a="textnext">Avanti</button><button class="ghost" data-a="closetext">Chiudi</button></div></section>';
+  var left=textLines.filter(function(l){return !l.proj}).length;
+  return '<section class="imp"><h2>Scegli le categorie</h2><p>'+(left?'Mancano '+left+' di '+textLines.length+' da assegnare.':'Tutte assegnate: puoi importare.')+'</p><div class="r"><select data-tall aria-label="Assegna lo stesso progetto a tutte">'+projOpts('').replace('Scegli progetto…','Assegna a tutte…')+'</select></div>'+
+    textLines.map(function(l,i){return '<div class="r" data-ti="'+i+'"><span style="flex:1 1 220px;min-width:0;overflow-wrap:anywhere">'+esc(l.title)+'</span><select data-tp aria-label="Progetto">'+projOpts(l.proj)+'</select><select data-ts aria-label="Peso">'+sizeOpts(l.size)+'</select><button class="ghost" data-a="txtdrop" aria-label="Scarta questa riga">✕</button></div>'}).join('')+
+    '<div class="r"><button class="go" data-a="doText">Importa '+textLines.length+'</button><button class="ghost" data-a="textback">Indietro</button><button class="ghost" data-a="closetext">Chiudi</button></div></section>';
 }
-async function doTextImport(){
+function textNext(){
   var lines=$('txtArea').value.split(/\r?\n/).map(function(l){return l.replace(/^\s*(?:[-*•▪◦·]\s*)?(?:\[[ xX]?\]\s*)?(?:\d+[.)]\s+)?/,'').trim()}).filter(Boolean);
   if(!lines.length){toast('Incolla almeno una riga');return}
-  var proj=$('txtProj').value,size=+$('txtSize').value,now=Date.now();
-  showText=false;
-  for(var i=0;i<lines.length;i++)await save({id:uid(),title:lines[i],project:proj,type:'task',date:'',time:'',size:size,done:false,doneAt:null,created:now+i});
-  render();toast(lines.length+(lines.length===1?' task importata':' task importate'));
+  textLines=lines.map(function(t){return {title:t,proj:'',size:2}});render();
+}
+async function doTextImport(){
+  if(!textLines||!textLines.length)return;
+  if(textLines.some(function(l){return !l.proj})){toast('Scegli il progetto di ogni riga');return}
+  var items=textLines,now=Date.now();
+  showText=false;textLines=null;textDraft='';
+  for(var i=0;i<items.length;i++)await save({id:uid(),title:items[i].title,project:items[i].proj,type:'task',date:'',time:'',size:items[i].size,done:false,doneAt:null,created:now+i});
+  render();toast(items.length+(items.length===1?' task importata':' task importate'));
 }
 function syncHTML(){
   return '<section class="imp"><h2>Sincronizzazione tra dispositivi</h2><p>Le task si salvano in un repo GitHub privato (<b>'+GH_REPO+'</b>). Su ogni dispositivo serve un token personale: GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token, repository access solo su <b>centro-missioni-data</b>, permesso <b>Contents: Read and write</b>. Il token resta solo in questo browser.</p><div class="r"><input type="password" id="ghTok" placeholder="Incolla il token github_pat_…" aria-label="Token GitHub" autocomplete="off" style="flex:1;min-width:220px" value="'+esc(ghToken)+'"><button class="go" data-a="savesync">'+(ghToken?'Aggiorna token':'Collega')+'</button>'+(ghToken?'<button class="ghost" data-a="offsync">Scollega</button>':'')+'<button class="ghost" data-a="closesync">Chiudi</button></div></section>';
@@ -639,19 +772,26 @@ function render(){
   $('lvl').innerHTML='<div class="r1"><span class="rank">Lv '+s.lv+' · '+s.rank+'</span><span class="n">'+s.xp+' / '+s.next+' XP</span></div><div class="bar"><i id="lvlbar" style="width:'+lastPct+'%"></i></div>';
   setTimeout(function(){var b=$('lvlbar');if(b)b.style.width=pct+'%'},40);lastPct=pct;
   var flame='<svg viewBox="0 0 24 24"><path d="M12 2c1 3.5-1 5-2.5 7C8 11 7 12.5 7 14.5A5 5 0 0 0 12 20a5 5 0 0 0 5-5.500c0-2-1-3.200-2-4.500-.5 1.200-1.200 1.800-2 2 .8-3.500-.2-6-1-8.000z"/></svg>';
-  $('streak').className='streak'+(s.streak?'':' off');
-  $('streak').innerHTML=flame+'<div><b>'+s.streak+'</b> <span>'+(s.streak===1?'giorno':'giorni')+' di fila</span></div>';
+  $('streak').className='streak'+(s.best?'':' off');
+  $('streak').title='Il tuo record di giorni consecutivi con almeno una task completata';
+  $('streak').innerHTML=flame+'<div><b>'+s.best+'</b> <span>'+(s.best===1?'giorno':'giorni')+' record</span></div>';
 
   var all=tasks.filter(function(t){return !t.done}).length;
   $('side').innerHTML='<h3>Progetti</h3><button class="pf" data-f="" aria-pressed="'+(!filter)+'"><i class="dot"></i>Tutti<span class="cnt">'+all+'</span></button>'+
     PROJECTS.map(function(p){var n=tasks.filter(function(t){return t.project===p.id&&!t.done}).length;return '<button class="pf" data-f="'+p.id+'" aria-pressed="'+(filter===p.id)+'" style="--pc:var(--c-'+p.id+')"><i class="dot"></i>'+esc(p.name)+'<span class="cnt">'+n+'</span></button>'}).join('')+
     '<div class="tools"><button class="ghost" data-a="opentext">Importa da testo</button><button class="ghost" data-a="openimp">Importa calendario .ics</button></div>';
 
-  var T=[['oggi','Oggi'],['settimana','Settimana'],['progressi','Progressi'],['progetti','Progetti'],['trofei','Trofei']];
-  $('tabs').innerHTML=T.map(function(t){return '<button class="tab" role="tab" data-v="'+t[0]+'" aria-selected="'+(view===t[0])+'">'+t[1]+'</button>'}).join('');
+  var tabs=function(T){return T.map(function(t){return '<button class="tab" role="tab" data-v="'+t[0]+'" aria-selected="'+(view===t[0])+'">'+t[1]+'</button>'}).join('')};
+  $('tabsR').innerHTML=tabs(RANGE);$('tabsX').innerHTML=tabs(EXTRA);
 
-  var body=view==='settimana'?viewSettimana():view==='progressi'?viewProgressi(s):view==='progetti'?viewProgetti(s):view==='trofei'?viewTrofei(s):viewOggi(s);
-  $('view').innerHTML=(showSync?syncHTML()+'<div style="height:16px"></div>':'')+(showText?textImpHTML()+'<div style="height:16px"></div>':'')+(showImport?importHTML()+'<div style="height:16px"></div>':'')+body;
+  var main=view==='progressi'?viewProgressi(s):view==='progetti'?viewProgetti(s):view==='trofei'?viewTrofei(s):null;
+  if(main===null){
+    var cal=view==='settimana'?viewSettimana():view==='mese'?viewMese():view==='anno'?viewAnno():view==='vita'?viewVita():viewGiorno();
+    main='<div class="board"><section class="calbox">'+cal+'</section><aside class="tl" aria-label="Tutte le task">'+allTasksHTML()+'</aside></div>';
+  }else main='<div class="page">'+main+'</div>';
+  var keep=lastView===view?[].map.call(document.querySelectorAll('.calbox,.tl,.page'),function(el){return el.scrollTop}):[];lastView=view;
+  $('view').innerHTML=(showSync?syncHTML()+'<div style="height:16px"></div>':'')+(showText?textImpHTML()+'<div style="height:16px"></div>':'')+(showImport?importHTML()+'<div style="height:16px"></div>':'')+main+focusHTML(visible(),s);
+  [].forEach.call(document.querySelectorAll('.calbox,.tl,.page'),function(el,i){if(keep[i])el.scrollTop=keep[i]});
   if(!col){setGh(ghToken?(ghState==='off'?'ok':ghState):'off')}else $('sync').hidden=true;
 }
 
@@ -671,6 +811,12 @@ function banner(small,big){
   var b=document.createElement('div');b.className='banner';b.setAttribute('aria-hidden','true');
   b.innerHTML='<div><small>'+esc(small)+'</small><b>'+esc(big)+'</b></div>';
   document.body.appendChild(b);setTimeout(function(){b.remove()},2300);
+}
+async function doneOn(id,day){
+  var t=find(id);if(!t||!day||day>todayStr())return;
+  var was=t.done;
+  await save(Object.assign({},t,{done:true,doneAt:day}));
+  toast(was?'Giorno di completamento aggiornato':'Segnata come fatta il '+fmtDay(day)+' · +'+xpOf(t)+' XP');
 }
 async function toggle(id){
   var t=find(id);if(!t)return;
@@ -692,21 +838,48 @@ async function toggle(id){
   }
 }
 
+document.addEventListener('input',function(e){if(e.target.id==='txtArea')textDraft=e.target.value});
+document.addEventListener('change',function(e){
+  var tr=e.target.closest('[data-ti]');
+  if(tr&&textLines){var l=textLines[+tr.dataset.ti];if(e.target.matches('[data-tp]')){l.proj=e.target.value;render()}else if(e.target.matches('[data-ts]'))l.size=+e.target.value;return}
+  if(e.target.matches('[data-tall]')&&textLines&&e.target.value){textLines.forEach(function(l){l.proj=e.target.value});render();return}
+  var i=e.target.closest('[data-dt]');if(!i||!i.value)return;
+  var row=i.closest('[data-id]');if(row)doneOn(row.dataset.id,i.value);
+});
 document.addEventListener('click',function(e){
+  var d=e.target.closest('[data-dt]');if(d&&d.showPicker){try{d.showPicker()}catch(x){}}
   var f=e.target.closest('[data-f]');
   if(f){filter=f.dataset.f||null;render();return}
+  var gd=e.target.closest('[data-goday]');
+  if(gd){curDay=gd.dataset.goday;view='oggi';try{localStorage.setItem('cm_view',view)}catch(x){}render();return}
+  var gm=e.target.closest('[data-gomonth]');
+  if(gm){monthOff=+gm.dataset.gomonth;view='mese';try{localStorage.setItem('cm_view',view)}catch(x){}render();return}
   var v=e.target.closest('[data-v]');
   if(v){view=v.dataset.v;try{localStorage.setItem('cm_view',view)}catch(x){}render();return}
   var a=e.target.closest('[data-a]');if(!a)return;
   var act=a.dataset.a,row=a.closest('[data-id]'),id=row&&row.dataset.id;
   if(act==='toggle')toggle(id);
   else if(act==='del')remove(id);
+  else if(act==='yesterday')doneOn(id,ymd(addDays(new Date(),-1)));
   else if(act==='tomorrow'){var t=find(id);if(t){var n=Object.assign({},t,{date:ymd(addDays(new Date(),1))});save(n);toast('Spostata a domani')}}
   else if(act==='wprev'){weekOff--;render()}
   else if(act==='wnext'){weekOff++;render()}
   else if(act==='wnow'){weekOff=0;render()}
-  else if(act==='opentext'){showText=true;showImport=false;render();var ta=$('txtArea');if(ta)ta.focus()}
-  else if(act==='closetext'){showText=false;render()}
+  else if(act==='dprev'||act==='dnext'){curDay=ymd(addDays(parseYmd(curDay||todayStr()),act==='dnext'?1:-1));render()}
+  else if(act==='dnow'){curDay=todayStr();render()}
+  else if(act==='mprev'){monthOff--;render()}
+  else if(act==='mnext'){monthOff++;render()}
+  else if(act==='mnow'){monthOff=0;render()}
+  else if(act==='yprev'){yearOff--;render()}
+  else if(act==='ynext'){yearOff++;render()}
+  else if(act==='ynow'){yearOff=0;render()}
+  else if(act==='savebirth'){var bv=$('birthIn').value;if(!bv){toast('Scegli la data di nascita');return}birth=bv;try{localStorage.setItem('cm_birth',bv)}catch(x){}render()}
+  else if(act==='resetbirth'){birth='';try{localStorage.removeItem('cm_birth')}catch(x){}render()}
+  else if(act==='opentext'){showText=true;showImport=false;textLines=null;render();var ta=$('txtArea');if(ta)ta.focus()}
+  else if(act==='closetext'){showText=false;textLines=null;textDraft='';render()}
+  else if(act==='textnext')textNext();
+  else if(act==='textback'){textLines=null;render()}
+  else if(act==='txtdrop'){var tr=a.closest('[data-ti]');textLines.splice(+tr.dataset.ti,1);if(!textLines.length)textLines=null;render()}
   else if(act==='doText')doTextImport();
   else if(act==='opensync'){showSync=true;render()}
   else if(act==='closesync'){showSync=false;render()}
@@ -735,6 +908,8 @@ document.addEventListener('pointerdown',function(e){
   function scroll(){
     var m=70,v=innerHeight,d=y<m?-(m-y)/4:y>v-m?(y-(v-m))/4:0;
     if(d)window.scrollBy(0,d);
+    var box=list.closest('.tl');
+    if(box){var br=box.getBoundingClientRect();if(y<br.top+40)box.scrollTop-=8;else if(y>br.bottom-40)box.scrollTop+=8}
     raf=requestAnimationFrame(function(){place();scroll()});
   }
   scroll();
@@ -758,12 +933,10 @@ $('addDate').value=todayStr();
 $('addForm').addEventListener('submit',function(e){
   e.preventDefault();
   var title=$('addTitle').value.trim();if(!title)return;
-  var type=$('addType').value;
-  save({id:uid(),title:title,project:$('addProj').value,type:type,date:$('addDate').value||'',time:'',size:+$('addSize').value,done:false,doneAt:null,created:Date.now()});
+  save({id:uid(),title:title,project:$('addProj').value,type:'task',date:$('addDate').value||'',time:'',size:+$('addSize').value,done:false,doneAt:null,created:Date.now()});
   $('addTitle').value='';$('addTitle').focus();toast('Aggiunta');
 });
 $('addProj').innerHTML=PROJECTS.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>'}).join('');
-$('addType').addEventListener('change',function(){if(this.value==='evento')$('addSize').value='1'});
 
 async function loadExamples(){
   var d=function(n){return ymd(addDays(new Date(),n))};
