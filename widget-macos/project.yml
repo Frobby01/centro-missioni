@@ -1,0 +1,54 @@
+name: CentroMissioni
+options:
+  bundleIdPrefix: it.frobby.centromissioni
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # firma locale; per un team Apple imposta DEVELOPMENT_TEAM in Xcode
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Manual
+    ENABLE_HARDENED_RUNTIME: NO
+    SWIFT_VERSION: "5.0"
+targets:
+  CentroMissioni:
+    type: application
+    platform: macOS
+    sources: [App, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: it.frobby.centromissioni
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Centro Missioni
+        INFOPLIST_KEY_LSUIElement: YES
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleURLTypes:
+          - CFBundleURLName: it.frobby.centromissioni
+            CFBundleURLSchemes: [centromissioni]
+    dependencies:
+      - target: CentroMissioniWidget
+  CentroMissioniWidget:
+    type: app-extension
+    platform: macOS
+    sources: [Widget, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: it.frobby.centromissioni.widget
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Centro Missioni
+    info:
+      path: Widget/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widget/Widget.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.temporary-exception.files.home-relative-path.read-only:
+          - /Library/Application Support/CentroMissioni/

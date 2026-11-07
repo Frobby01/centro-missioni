@@ -1,0 +1,443 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2E36219989302D8F53123ECB /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6108A7508FD4659F6EA128 /* Shared.swift */; };
+		52B593FCBE068F7115D642AF /* CentroMissioniWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C271675DED11BB2571B93A37 /* CentroMissioniWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5A0E72869FC095BCD343ED8A /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82BFBA7B8AE452A1AFDED7E5 /* Model.swift */; };
+		6325F42365856034D27C7460 /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E365F65793CE6BDF9A1CFCB /* Widget.swift */; };
+		E3EC1F95A93DF5B3179EDF49 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6416547DAA77C767C8DF10D8 /* App.swift */; };
+		F79E38774034B9071C46D54F /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6108A7508FD4659F6EA128 /* Shared.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		73373CCD5F734432D2BAABFD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC7C846F6E76704398271A98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC34B1CBF9FA4F67203455A7;
+			remoteInfo = CentroMissioniWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FB360CC8310741CA2E69C03B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				52B593FCBE068F7115D642AF /* CentroMissioniWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0EAE5499ECFA21CBEA1C411D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		11549F110867BCC8EB6E66D4 /* CentroMissioni.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CentroMissioni.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B6108A7508FD4659F6EA128 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
+		6416547DAA77C767C8DF10D8 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		82BFBA7B8AE452A1AFDED7E5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		8E365F65793CE6BDF9A1CFCB /* Widget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
+		C271675DED11BB2571B93A37 /* CentroMissioniWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CentroMissioniWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E3F9000DEC3DE3647A2C411D /* Widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Widget.entitlements; sourceTree = "<group>"; };
+		EE6A08A932055EF2E27F91BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		4C12315503769BBA589AE3D0 /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				EE6A08A932055EF2E27F91BD /* Info.plist */,
+				82BFBA7B8AE452A1AFDED7E5 /* Model.swift */,
+				E3F9000DEC3DE3647A2C411D /* Widget.entitlements */,
+				8E365F65793CE6BDF9A1CFCB /* Widget.swift */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
+		4F37BA8C9DEDF0491EF98208 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				6416547DAA77C767C8DF10D8 /* App.swift */,
+				0EAE5499ECFA21CBEA1C411D /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		5B3AF471FF0EF5113EE7BBFD /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				1B6108A7508FD4659F6EA128 /* Shared.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		7A1D39A521070D56339F0CB7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				11549F110867BCC8EB6E66D4 /* CentroMissioni.app */,
+				C271675DED11BB2571B93A37 /* CentroMissioniWidget.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		836BA04B96F0E5B98C9CB794 = {
+			isa = PBXGroup;
+			children = (
+				4F37BA8C9DEDF0491EF98208 /* App */,
+				5B3AF471FF0EF5113EE7BBFD /* Shared */,
+				4C12315503769BBA589AE3D0 /* Widget */,
+				7A1D39A521070D56339F0CB7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B718CDA41006099DAC1E8365 /* CentroMissioni */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D05D10E132E108DC5A53A8FB /* Build configuration list for PBXNativeTarget "CentroMissioni" */;
+			buildPhases = (
+				EADE49E2ADCBC8891967089B /* Sources */,
+				FB360CC8310741CA2E69C03B /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2F49FD6A535B891BFA376269 /* PBXTargetDependency */,
+			);
+			name = CentroMissioni;
+			packageProductDependencies = (
+			);
+			productName = CentroMissioni;
+			productReference = 11549F110867BCC8EB6E66D4 /* CentroMissioni.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FC34B1CBF9FA4F67203455A7 /* CentroMissioniWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 86F882BFDE800BF9D4CC54AE /* Build configuration list for PBXNativeTarget "CentroMissioniWidget" */;
+			buildPhases = (
+				ADE9C4F4D76B298DAE1B1E6A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CentroMissioniWidget;
+			packageProductDependencies = (
+			);
+			productName = CentroMissioniWidget;
+			productReference = C271675DED11BB2571B93A37 /* CentroMissioniWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BC7C846F6E76704398271A98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B718CDA41006099DAC1E8365 = {
+						ProvisioningStyle = Manual;
+					};
+					FC34B1CBF9FA4F67203455A7 = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = ADD94E4360AF101538F603FD /* Build configuration list for PBXProject "CentroMissioni" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 836BA04B96F0E5B98C9CB794;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7A1D39A521070D56339F0CB7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B718CDA41006099DAC1E8365 /* CentroMissioni */,
+				FC34B1CBF9FA4F67203455A7 /* CentroMissioniWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ADE9C4F4D76B298DAE1B1E6A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A0E72869FC095BCD343ED8A /* Model.swift in Sources */,
+				2E36219989302D8F53123ECB /* Shared.swift in Sources */,
+				6325F42365856034D27C7460 /* Widget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EADE49E2ADCBC8891967089B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3EC1F95A93DF5B3179EDF49 /* App.swift in Sources */,
+				F79E38774034B9071C46D54F /* Shared.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2F49FD6A535B891BFA376269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC34B1CBF9FA4F67203455A7 /* CentroMissioniWidget */;
+			targetProxy = 73373CCD5F734432D2BAABFD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		09C93E6CE4FEC543395C9B2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		36835D1928FA25ABA43DB946 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Centro Missioni";
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = it.frobby.centromissioni;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		518F784E8C7F5E0D8F445CF0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widget/Widget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Centro Missioni";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = it.frobby.centromissioni.widget;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		66744D72ED1BC68C00EE06AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C9666CBBD0AAEC72B4363A82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widget/Widget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Centro Missioni";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = it.frobby.centromissioni.widget;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D033D68CC24A1D1A41395152 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = App/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Centro Missioni";
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = it.frobby.centromissioni;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		86F882BFDE800BF9D4CC54AE /* Build configuration list for PBXNativeTarget "CentroMissioniWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				518F784E8C7F5E0D8F445CF0 /* Debug */,
+				C9666CBBD0AAEC72B4363A82 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ADD94E4360AF101538F603FD /* Build configuration list for PBXProject "CentroMissioni" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09C93E6CE4FEC543395C9B2D /* Debug */,
+				66744D72ED1BC68C00EE06AE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D05D10E132E108DC5A53A8FB /* Build configuration list for PBXNativeTarget "CentroMissioni" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36835D1928FA25ABA43DB946 /* Debug */,
+				D033D68CC24A1D1A41395152 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BC7C846F6E76704398271A98 /* Project object */;
+}
