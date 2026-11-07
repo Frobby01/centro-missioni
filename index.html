@@ -1,7 +1,7 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Centro Missioni</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' rx='11' fill='%23f26a0f'/%3E%3Cg transform='translate(7 7) scale(.9167)' fill='none' stroke='%23fff' stroke-width='2.2'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3Ccircle cx='12' cy='12' r='1' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: sidebar progetti + colonna principale a tab (Oggi / Settimana / Progetti / Trofei); dark-first stile Linear */
 :root{
@@ -129,6 +129,10 @@ body.sorting,body.sorting *{cursor:grabbing!important;user-select:none;-webkit-u
 .mini .chk{width:16px;height:16px;border-radius:5px;margin-top:1px}
 .mini .chk svg{width:10px;height:10px}
 .mini .t{font-size:11px;color:var(--mut)}
+.mini .acts{display:flex;flex-wrap:wrap;gap:2px;margin:2px 0 0 -7px}
+.mini:hover .acts,.mini:focus-within .acts{opacity:1}
+@media (hover:hover){.wk .mini .acts{display:none}.wk .mini:hover .acts,.wk .mini:focus-within .acts{display:flex}}
+.sec>h2 .act{margin-left:auto;text-transform:none;letter-spacing:0}
 .mini.done .ttl{color:var(--dim);text-decoration:line-through}
 .mini.done .chk{background:var(--pc)}
 .mini.done .chk svg{opacity:1}
@@ -401,6 +405,82 @@ body.dnd,body.dnd *{cursor:grabbing!important;user-select:none;-webkit-user-sele
   .mc{min-height:58px}
   .mt{display:none}
 }
+/* ===== Liquid Glass (stile Apple): sfondo a macchie di colore, superfici traslucide sfocate, bordi speculari, capsule, SF Pro ===== */
+:root{
+  --font:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',system-ui,sans-serif; --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --bg:#06080f; --panel:rgba(255,255,255,.07); --panel2:rgba(255,255,255,.08); --line:rgba(255,255,255,.12);
+  --fg:#f5f5f7; --mut:rgba(235,235,245,.64); --dim:rgba(235,235,245,.4);
+  --ink:rgba(255,255,255,.08); --ink2:rgba(255,255,255,.14); --ink-fg:#f5f5f7;
+  --accent:#ff8a1f; --accent-fg:#fff; --good:#30d158; --warn:#ffd60a; --bad:#ff453a;
+  --glass:rgba(40,44,60,.3); --edge:rgba(255,255,255,.16); --hi:rgba(255,255,255,.22); --thumb:rgba(255,255,255,.2);
+  --glass-sh:inset 0 1px 0 var(--hi),inset 0 -1px 0 rgba(255,255,255,.05),0 10px 34px -10px rgba(0,0,0,.55);
+  --blob1:rgba(255,122,46,.55); --blob2:rgba(10,132,255,.5); --blob3:rgba(191,90,242,.42); --blob4:rgba(48,209,88,.28);
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#eef0f6; --panel:rgba(255,255,255,.5); --panel2:rgba(118,118,128,.1); --line:rgba(60,60,67,.12);
+  --fg:#1d1d1f; --mut:rgba(60,60,67,.68); --dim:rgba(60,60,67,.42);
+  --ink:rgba(255,255,255,.55); --ink2:rgba(118,118,128,.14); --ink-fg:#1d1d1f;
+  --accent:#f56a00; --accent-fg:#fff; --good:#28a745; --warn:#c98a00; --bad:#e5342b;
+  --glass:rgba(255,255,255,.48); --edge:rgba(255,255,255,.75); --hi:rgba(255,255,255,.95); --thumb:#fff;
+  --glass-sh:inset 0 1px 0 var(--hi),inset 0 -1px 0 rgba(255,255,255,.4),0 10px 30px -12px rgba(30,40,80,.28);
+  --blob1:rgba(255,149,0,.45); --blob2:rgba(0,122,255,.38); --blob3:rgba(175,82,222,.32); --blob4:rgba(52,199,89,.28)}}
+:root[data-theme="light"]{
+  --bg:#eef0f6; --panel:rgba(255,255,255,.5); --panel2:rgba(118,118,128,.1); --line:rgba(60,60,67,.12);
+  --fg:#1d1d1f; --mut:rgba(60,60,67,.68); --dim:rgba(60,60,67,.42);
+  --ink:rgba(255,255,255,.55); --ink2:rgba(118,118,128,.14); --ink-fg:#1d1d1f;
+  --accent:#f56a00; --accent-fg:#fff; --good:#28a745; --warn:#c98a00; --bad:#e5342b;
+  --glass:rgba(255,255,255,.48); --edge:rgba(255,255,255,.75); --hi:rgba(255,255,255,.95); --thumb:#fff;
+  --glass-sh:inset 0 1px 0 var(--hi),inset 0 -1px 0 rgba(255,255,255,.4),0 10px 30px -12px rgba(30,40,80,.28);
+  --blob1:rgba(255,149,0,.45); --blob2:rgba(0,122,255,.38); --blob3:rgba(175,82,222,.32); --blob4:rgba(52,199,89,.28)}
+body{background:transparent;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+/* sfondo "wallpaper" fisso: position:fixed invece di background-attachment, che su iOS non funziona */
+body::before{content:"";position:fixed;inset:-10%;z-index:-1;pointer-events:none;filter:blur(10px);
+  background:radial-gradient(40% 45% at 8% 6%,var(--blob1),transparent 70%),radial-gradient(38% 42% at 96% 12%,var(--blob2),transparent 70%),radial-gradient(45% 48% at 82% 96%,var(--blob3),transparent 70%),radial-gradient(38% 40% at 6% 94%,var(--blob4),transparent 70%)}
+.calbox,.tl,.page,.lvl,.streak,.tabs,.add,.fc,.imp,.toast,.banner>div,.quest,.ghost,.pcard,.badge,.stat,.card,.w7bars{
+  background-color:var(--glass);background-image:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0) 42%);
+  -webkit-backdrop-filter:blur(26px) saturate(180%);backdrop-filter:blur(26px) saturate(180%);
+  border:1px solid var(--edge);box-shadow:var(--glass-sh)}
+.calbox,.tl,.page{border-radius:28px}
+.lvl,.streak,.fc,.imp,.quest,.pcard,.badge,.stat,.card,.w7bars{border-radius:22px}
+.add{border-radius:26px;padding:8px}
+.lvl{color:var(--fg)}
+.lvl .n,.quest p{color:var(--mut)}
+.lvl .bar,.bar,.pip{background:var(--panel2)}
+.bar>i{background:linear-gradient(90deg,var(--accent),#ffc069);box-shadow:0 0 10px -2px var(--accent)}
+.top h1{font-size:22px;font-weight:700;letter-spacing:-.025em}
+.logo{border-radius:12px;background:linear-gradient(160deg,#ffb15c,var(--accent) 55%,#e14f00);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 16px -6px var(--accent)}
+/* tab e pulsanti a capsula; selezione = "goccia" di vetro chiaro */
+.tabs{padding:4px;gap:2px}
+.tab{border-radius:999px;padding:7px 16px;color:var(--fg);font-weight:500;transition:background .2s,box-shadow .2s}
+.tab:hover{background:var(--panel2)}
+.tab[aria-selected=true]{background:var(--thumb);color:var(--accent);font-weight:600;box-shadow:inset 0 1px 0 var(--hi),0 2px 10px -3px rgba(0,0,0,.3)}
+.ghost{border-radius:999px;padding:7px 14px;color:var(--fg)}
+.ghost:hover{border-color:var(--edge);background-color:var(--thumb)}
+.act{border-radius:999px}
+.act:hover{background:var(--panel2)}
+.add .go{border-radius:999px;padding:9px 20px;background:linear-gradient(180deg,#ffa24a,var(--accent));box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 6px 16px -6px var(--accent)}
+.add input,.add select,.imp input,.imp select,.imp textarea{background:var(--panel2);border:1px solid transparent;border-radius:14px}
+.add input[type=text]{background:transparent;padding-left:10px}
+/* elementi dentro il vetro: riempimenti tenui senza blur (niente blur annidato) */
+.mini,.day,.mc{background:var(--panel2);border:1px solid transparent;border-radius:14px}
+.mini{padding:8px 10px}
+.day.today,.mc.today{border-color:color-mix(in srgb,var(--accent) 60%,transparent);background:color-mix(in srgb,var(--accent) 10%,var(--panel2))}
+.row{border-top-color:var(--line);margin:0 6px;border-radius:14px}
+.row:hover{background:var(--panel2)}
+.tl .list,.list{background:none;border:0;box-shadow:none}
+.pf{border-radius:12px;color:var(--fg)}
+.pf:hover{background:var(--panel2)}
+.pf[aria-pressed=true]{background:var(--thumb);box-shadow:inset 0 1px 0 var(--hi),0 2px 10px -4px rgba(0,0,0,.3)}
+.empty{background:var(--panel2);border:1px dashed var(--line);border-radius:18px;box-shadow:none}
+.tag{border-radius:999px;border-color:var(--line);padding:0 7px}
+.pill{font:600 12px var(--font);letter-spacing:-.01em;text-transform:none;padding:4px 11px}
+.sec>h2,.tlh,.focus h2,.day h4,.side h3{text-transform:none;letter-spacing:-.01em;font-size:13px;font-weight:600}
+.fc .ic{border-radius:12px}
+.toast{color:var(--fg);border-radius:999px;padding:10px 18px}
+.row.dragging{background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+@media (prefers-reduced-transparency:reduce){
+  .calbox,.tl,.page,.lvl,.streak,.tabs,.add,.fc,.imp,.toast,.banner>div,.quest,.ghost,.pcard,.badge,.stat,.card,.w7bars{-webkit-backdrop-filter:none;backdrop-filter:none;background-color:var(--bg)}
+}
 </style>
 
 <div class="wrap">
@@ -560,11 +640,12 @@ function badges(s){
 }
 
 /* ---------- render ---------- */
+function isLate(t,td){return !t.done&&!t.soft&&t.date&&t.date<(td||todayStr())}
 function visible(){return tasks.filter(function(t){return !t.life&&(!filter||t.project===filter)})}
 function sortT(a,b){return (a.prio==null?1e9:a.prio)-(b.prio==null?1e9:b.prio)||(a.date||'9999').localeCompare(b.date||'9999')||(a.time||'99:99').localeCompare(b.time||'99:99')||(a.created||0)-(b.created||0)}
 var CHECK='<svg viewBox="0 0 12 12"><path d="M2 6.5l2.6 2.6L10 3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-function rowHTML(t,showDate){
+function rowHTML(t,showDate,noActs){
   var p=PM[t.project]||PM.personale;
   var meta='<span class="chip"><i class="dot" style="--pc:var(--c-'+p.id+')"></i>'+esc(p.name)+'</span>';
   if(t.type!=='task')meta+='<span class="tag">'+TYPE_LABEL[t.type]+'</span>';
@@ -576,9 +657,9 @@ function rowHTML(t,showDate){
     '<button class="chk" data-a="toggle" aria-label="'+(t.done?'Riapri':'Completa')+': '+esc(t.title)+'">'+CHECK+'</button>'+
     '<div><div class="ttl">'+esc(t.title)+'</div><div class="meta">'+meta+'</div></div>'+
     '<span class="xp">+'+xpOf(t)+'</span>'+
-    '<div class="acts">'+(t.done||t.life?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">✓ ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>')+(t.life&&!t.done?'':'<span class="act dt" title="'+(t.done?'Cambia il giorno di completamento':'Segna come fatta in un altro giorno')+'">'+(t.done?'📅 '+esc(fmtDay(t.doneAt||todayStr())):'📅')+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span>')+'<button class="act" data-a="del" title="Elimina" aria-label="Elimina">✕</button></div></div>';
+    (noActs?'':'<div class="acts">'+(t.done||t.life?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">✓ ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>')+(t.life&&!t.done?'':'<span class="act dt" title="'+(t.done?'Cambia il giorno di completamento':'Segna come fatta in un altro giorno')+'">'+(t.done?'📅 '+esc(fmtDay(t.doneAt||todayStr())):'📅')+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span>')+'<button class="act" data-a="del" title="Elimina" aria-label="Elimina">✕</button></div>')+'</div>';
 }
-function listHTML(arr,showDate){return '<div class="list">'+arr.map(function(t){return rowHTML(t,showDate)}).join('')+'</div>'}
+function listHTML(arr,showDate,noActs){return '<div class="list">'+arr.map(function(t){return rowHTML(t,showDate,noActs)}).join('')+'</div>'}
 function secHTML(title,arr,cls,showDate){
   if(!arr.length)return '';
   return '<section class="sec"><h2 class="'+(cls||'')+'">'+title+' <em>'+arr.length+'</em></h2>'+listHTML(arr,showDate)+'</section>';
@@ -586,27 +667,31 @@ function secHTML(title,arr,cls,showDate){
 
 function focusHTML(v,s){
   var td=todayStr(),dn=Math.min(QUEST_N,s.byDay[td]||0);
-  var pick=v.filter(function(t){return !t.done&&(!t.date||t.date<=td)}).sort(function(a,b){return (a.prio==null?1e9:a.prio)-(b.prio==null?1e9:b.prio)||(a.date||'9999').localeCompare(b.date||'9999')||xpOf(b)-xpOf(a)}).slice(0,6);
+  var pick=v.filter(function(t){return !t.done&&(!t.date||t.date<=td)}).sort(function(a,b){return (a.soft?1:0)-(b.soft?1:0)||(a.prio==null?1e9:a.prio)-(b.prio==null?1e9:b.prio)||(a.date||'9999').localeCompare(b.date||'9999')||xpOf(b)-xpOf(a)}).slice(0,6);
   var doneToday=v.filter(function(t){return t.done&&t.doneAt===td}).slice(0,2);
   var all=pick.concat(doneToday);
   if(!all.length)return '';
   return '<section class="focus"><div class="fhead"><span class="pill">Per te oggi</span><span class="mono qline" title="Completa '+QUEST_N+' task oggi per +'+QUEST_XP+' XP bonus">Missione '+dn+'/'+QUEST_N+(dn>=QUEST_N?' · +'+QUEST_XP+' XP':'')+'</span></div><div class="fcards">'+all.map(function(t){
     var p=PM[t.project]||PM.personale;
-    return '<div class="fc'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><div class="ft"><span class="ic">'+esc(p.name.slice(0,2).toUpperCase())+'</span><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button></div><div class="tt">'+esc(t.title)+'</div><div class="meta"><span>'+esc(p.name)+'</span><span class="mono">+'+xpOf(t)+' XP</span>'+(t.date&&t.date<td?'<span class="tag" style="color:var(--bad)">in ritardo</span>':'')+'</div></div>';
+    return '<div class="fc'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><div class="ft"><span class="ic">'+esc(p.name.slice(0,2).toUpperCase())+'</span><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button></div><div class="tt">'+esc(t.title)+'</div><div class="meta"><span>'+esc(p.name)+'</span><span class="mono">+'+xpOf(t)+' XP</span>'+(isLate(t,td)?'<span class="tag" style="color:var(--bad)">in ritardo</span>':'')+'</div></div>';
   }).join('')+'</div></section>';
 }
 function miniHTML(t,showDate){
   var p=PM[t.project]||PM.personale;
-  return '<div class="mini'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button><div><div class="ttl">'+esc(t.title)+'</div><div class="t">'+(showDate&&t.date?esc(fmtDay(t.date))+' · ':'')+(t.time?esc(t.time)+' · ':'')+esc(p.name)+(t.type!=='task'?' · '+TYPE_LABEL[t.type]:'')+'</div></div></div>';
+  return '<div class="mini'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button><div><div class="ttl">'+esc(t.title)+'</div><div class="t">'+(showDate&&t.date?esc(fmtDay(t.date))+' · ':'')+(t.time?esc(t.time)+' · ':'')+esc(p.name)+(t.type!=='task'?' · '+TYPE_LABEL[t.type]:'')+(t.soft&&!t.done?' · senza scadenza':'')+'</div>'+miniActs(t)+'</div></div>';
+}
+function miniActs(t){
+  return '<div class="acts">'+(t.done?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">✓ ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>'+(t.date?'<button class="act" data-a="soft" title="'+(t.soft?'Torna a segnarla in ritardo se passa la data':'Non segnarla in ritardo: non ha una vera scadenza')+'">'+(t.soft?'⏰ scadenza':'senza scadenza')+'</button>':''))+'<span class="act dt" title="'+(t.done?'Cambia il giorno di completamento':'Segna come fatta in un altro giorno')+'">'+(t.done?'📅 '+esc(fmtDay(t.doneAt||todayStr())):'📅')+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span><button class="act" data-a="del" title="Elimina" aria-label="Elimina">✕</button></div>';
 }
 function navHTML(label,a){return '<div class="wk-head"><h2>'+label+'</h2><button class="ghost" data-a="'+a+'prev" aria-label="Precedente">←</button><button class="ghost" data-a="'+a+'now">Oggi</button><button class="ghost" data-a="'+a+'next" aria-label="Successivo">→</button></div>'}
 function viewGiorno(){
   var td=todayStr(),ds=curDay||td,v=visible().sort(sortT);
-  var items=v.filter(function(t){return t.date===ds}),late=ds===td?v.filter(function(t){return !t.done&&t.date&&t.date<td}):[];
+  var items=v.filter(function(t){return t.date===ds}),late=ds===td?v.filter(function(t){return isLate(t,td)}):[],soft=ds===td?v.filter(function(t){return !t.done&&t.soft&&t.date&&t.date<td}):[];
   var untimed=items.filter(function(t){return !t.time}),timed=items.filter(function(t){return t.time});
   var h=navHTML(parseYmd(ds).toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}),'d');
-  if(late.length)h+='<section class="sec"><h2 class="late">In ritardo <em>'+late.length+'</em></h2>'+late.map(function(t){return miniHTML(t,true)}).join('')+'</section>';
-  if(!items.length&&!late.length)return h+'<div class="empty"><b>Niente in programma</b>Aggiungi una task dalla barra in basso o scegli un altro giorno.</div>';
+  if(late.length)h+='<section class="sec"><h2 class="late">In ritardo <em>'+late.length+'</em><button class="act" data-a="allsoft" title="Nessuna di queste ha una vera scadenza">tutte senza scadenza</button></h2>'+late.map(function(t){return miniHTML(t,true)}).join('')+'</section>';
+  if(soft.length)h+='<section class="sec"><h2>Rimaste indietro, senza scadenza <em>'+soft.length+'</em></h2>'+soft.map(function(t){return miniHTML(t,true)}).join('')+'</section>';
+  if(!items.length&&!late.length&&!soft.length)return h+'<div class="empty"><b>Niente in programma</b>Aggiungi una task dalla barra in basso o scegli un altro giorno.</div>';
   if(untimed.length)h+='<section class="sec"><h2>Durante la giornata <em>'+untimed.length+'</em></h2>'+untimed.map(function(t){return miniHTML(t)}).join('')+'</section>';
   if(timed.length){
     h+='<section class="sec"><h2>Con orario <em>'+timed.length+'</em></h2><div class="hrs">';
@@ -672,7 +757,7 @@ function allTasksHTML(){
   var v=visible().sort(sortT),open=v.filter(function(t){return !t.done});
   var done=v.filter(function(t){return t.done}).sort(function(a,b){return (b.doneAt||'').localeCompare(a.doneAt||'')}).slice(0,30);
   if(!tasks.length)return '<div class="empty"><b>Ancora nessuna task</b>Aggiungine una dalla barra in basso, importa un calendario .ics oppure parti da alcuni esempi.<br><button class="ghost" data-a="examples">Carica esempi</button></div>';
-  return '<h2 class="tlh">Tutte le task <em>'+open.length+'</em></h2>'+(open.length?listHTML(open,true):'<div class="empty">Nessuna task aperta.</div>')+(done.length?'<h2 class="tlh">Completate <em>'+done.length+'</em></h2>'+listHTML(done,true):'');
+  return '<h2 class="tlh">Tutte le task <em>'+open.length+'</em></h2>'+(open.length?listHTML(open,true,true):'<div class="empty">Nessuna task aperta.</div>')+(done.length?'<h2 class="tlh">Completate <em>'+done.length+'</em></h2>'+listHTML(done,true,true):'');
 }
 function viewProgetti(s){
   var h='<div class="pgrid">';
@@ -892,6 +977,8 @@ document.addEventListener('click',function(e){
   else if(act==='del')remove(id);
   else if(act==='yesterday')doneOn(id,ymd(addDays(new Date(),-1)));
   else if(act==='tomorrow'){var t=find(id);if(t){var n=Object.assign({},t,{date:ymd(addDays(new Date(),1))});save(n);toast('Spostata a domani')}}
+  else if(act==='soft'){var t=find(id);if(t){save(Object.assign({},t,{soft:!t.soft}));toast(t.soft?'Torna con scadenza':'Non più in ritardo')}}
+  else if(act==='allsoft'){var td=todayStr(),ls=visible().filter(function(t){return isLate(t,td)});Promise.all(ls.map(function(t){return save(Object.assign({},t,{soft:true}))}));toast(ls.length+' task senza scadenza')}
   else if(act==='wprev'){weekOff--;render()}
   else if(act==='wnext'){weekOff++;render()}
   else if(act==='wnow'){weekOff=0;render()}
