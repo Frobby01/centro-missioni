@@ -652,7 +652,7 @@ function miniHTML(t,showDate){
   return '<div class="mini'+(t.done?' done':'')+'" style="--pc:var(--c-'+p.id+')" data-id="'+esc(t.id)+'"><button class="chk" data-a="toggle" aria-label="Completa: '+esc(t.title)+'">'+CHECK+'</button><div><div class="ttl">'+esc(t.title)+'</div><div class="t">'+(showDate&&t.date?esc(fmtDay(t.date))+' · ':'')+(t.time?esc(t.time)+' · ':'')+p.emoji+' '+esc(p.name)+(t.type!=='task'?' · '+TYPE_LABEL[t.type]:'')+(t.soft&&!t.done?' · senza scadenza':'')+'</div>'+miniActs(t)+'</div></div>';
 }
 function miniActs(t){
-  return '<div class="acts">'+(t.done?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">✓ ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>'+(t.date?'<button class="act" data-a="soft" title="'+(t.soft?'Torna a segnarla in ritardo se passa la data':'Non segnarla in ritardo: non ha una vera scadenza')+'">'+(t.soft?'⏰ scadenza':'senza scadenza')+'</button>':''))+'<span class="act dt" title="'+(t.done?'Cambia il giorno di completamento':'Segna come fatta in un altro giorno')+'">'+(t.done?'📅 '+esc(fmtDay(t.doneAt||todayStr())):'📅')+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span><button class="act" data-a="del" title="Elimina" aria-label="Elimina">✕</button></div>';
+  return '<div class="acts">'+(t.done?'':'<button class="act" data-a="yesterday" title="Segna come fatta ieri">✓ ieri</button><button class="act" data-a="tomorrow" title="Sposta a domani">domani</button>'+(t.date?'<button class="act" data-a="soft" title="'+(t.soft?'Torna a segnarla in ritardo se passa la data':'Non segnarla in ritardo: non ha una vera scadenza')+'">'+(t.soft?'⏰ scadenza':'senza scadenza')+'</button>':''))+(t.done?'<span class="act dt" title="Cambia il giorno di completamento">📅 '+esc(fmtDay(t.doneAt||todayStr()))+'<input type="date" data-dt max="'+todayStr()+'" value="'+esc(t.doneAt||'')+'" aria-label="Giorno di completamento"></span>':'<span class="act dt" title="Sposta a un altro giorno">📅 sposta<input type="date" data-dt="move" value="'+esc(t.date||todayStr())+'" aria-label="Sposta a un altro giorno"></span>')+'<button class="act" data-a="del" title="Elimina" aria-label="Elimina">✕</button></div>';
 }
 function navHTML(label,a){return '<div class="wk-head"><h2>'+label+'</h2><button class="ghost" data-a="'+a+'prev" aria-label="Precedente">←</button><button class="ghost" data-a="'+a+'now">Oggi</button><button class="ghost" data-a="'+a+'next" aria-label="Successivo">→</button></div>'}
 function viewGiorno(){
@@ -849,7 +849,8 @@ function syncHTML(){
   return '<section class="imp"><h2>Sincronizzazione tra dispositivi</h2><p>Le task si salvano in un repo GitHub privato (<b>'+GH_REPO+'</b>). Su ogni dispositivo serve un token personale: GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token, repository access solo su <b>centro-missioni-data</b>, permesso <b>Contents: Read and write</b>. Il token resta solo in questo browser.</p><div class="r"><input type="password" id="ghTok" placeholder="Incolla il token github_pat_…" aria-label="Token GitHub" autocomplete="off" style="flex:1;min-width:220px" value="'+esc(ghToken)+'"><button class="go" data-a="savesync">'+(ghToken?'Aggiorna token':'Collega')+'</button>'+(ghToken?'<button class="ghost" data-a="offsync">Scollega</button>':'')+'<button class="ghost" data-a="closesync">Chiudi</button></div></section>';
 }
 function render(){
-  if(sorting){pendingRender=true;return}
+  var ae=document.activeElement;
+  if(sorting||(ae&&ae.matches&&ae.matches('[data-dt]'))){pendingRender=true;return}
   var s=stats();
   $('today').textContent=new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   var pct=Math.round((s.xp-s.cur)/(s.next-s.cur)*100);
@@ -930,8 +931,12 @@ document.addEventListener('change',function(e){
   if(tr&&textLines){var l=textLines[+tr.dataset.ti];if(e.target.matches('[data-tp]')){l.proj=e.target.value;render()}else if(e.target.matches('[data-ts]'))l.size=+e.target.value;return}
   if(e.target.matches('[data-tall]')&&textLines&&e.target.value){textLines.forEach(function(l){l.proj=e.target.value});render();return}
   var i=e.target.closest('[data-dt]');if(!i||!i.value)return;
-  var row=i.closest('[data-id]');if(row)doneOn(row.dataset.id,i.value);
+  var row=i.closest('[data-id]'),id=row&&row.dataset.id,v=i.value,mv=i.dataset.dt==='move';
+  i.blur();if(!id)return;
+  if(mv){var t=find(id);if(t&&t.date!==v){save(Object.assign({},t,{date:v}));toast('Spostata a '+fmtDay(v))}}
+  else doneOn(id,v);
 });
+document.addEventListener('focusout',function(e){if(e.target.matches&&e.target.matches('[data-dt]')&&pendingRender){pendingRender=false;setTimeout(render)}});
 document.addEventListener('click',function(e){
   var d=e.target.closest('[data-dt]');if(d&&d.showPicker){try{d.showPicker()}catch(x){}}
   var f=e.target.closest('[data-f]');
