@@ -26,12 +26,13 @@ struct Provider: TimelineProvider {
 }
 
 let projectColors: [String: Color] = [
-    "aisa": Color(red: 0.36, green: 0.62, blue: 1.00), "afk": Color(red: 0.96, green: 0.65, blue: 0.14),
-    "frobby": Color(red: 1.00, green: 0.37, blue: 0.60), "giochi": Color(red: 0.24, green: 0.81, blue: 0.56),
-    "cinic": Color(red: 0.18, green: 0.77, blue: 0.88), "vgi": Color(red: 1.00, green: 0.32, blue: 0.32),
-    "personale": Color(red: 0.69, green: 0.55, blue: 1.00),
+    // stessi --c-* e --accent di index.html
+    "aisa": Color(red: 0.42, green: 0.61, blue: 0.94), "afk": Color(red: 0.85, green: 0.64, blue: 0.25),
+    "frobby": Color(red: 0.88, green: 0.48, blue: 0.62), "giochi": Color(red: 0.37, green: 0.75, blue: 0.56),
+    "cinic": Color(red: 0.31, green: 0.72, blue: 0.80), "vgi": Color(red: 0.88, green: 0.39, blue: 0.39),
+    "personale": Color(red: 0.64, green: 0.55, blue: 0.88),
 ]
-let accent = Color(red: 1.00, green: 0.48, blue: 0.18)
+let accent = Color(red: 0.29, green: 0.44, blue: 0.82)
 
 struct WidgetView: View {
     @Environment(\.widgetFamily) var family
@@ -53,7 +54,7 @@ struct WidgetView: View {
                 Text("Lv \(s.level)").font(.headline.monospacedDigit()).foregroundStyle(accent)
                 if family != .systemSmall { Text(s.rank).font(.subheadline).foregroundStyle(.secondary) }
                 Spacer()
-                Text("🔥\(s.best)").font(.subheadline.monospacedDigit()).help("Streak record (giorni)")
+                Label("\(s.best)", systemImage: "flame").font(.subheadline.monospacedDigit()).foregroundStyle(.secondary).help("Streak record (giorni)")
             }
             ProgressView(value: Double(s.xp - s.cur), total: Double(max(s.next - s.cur, 1))).tint(accent)
             Text("Missione \(min(s.doneToday, Summary.questN))/\(Summary.questN) · \(s.xp) XP")
@@ -65,15 +66,12 @@ struct WidgetView: View {
                 Text(err).font(.caption).foregroundStyle(.red)
             } else if s.focus.isEmpty {
                 Spacer()
-                VStack(spacing: 4) {
-                    Text("🎉").font(.system(size: family == .systemSmall ? 28 : 40))
-                    Text("Tutto fatto per oggi").font(.callout).foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity)
+                Text("Tutto fatto per oggi").font(.callout).foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
             } else {
                 ForEach(s.focus.prefix(rows), id: \.id) { t in
                     HStack(spacing: 6) {
-                        Circle().fill(projectColors[t.project ?? ""] ?? .gray).frame(width: 7, height: 7)
+                        Circle().fill(projectColors[t.project ?? ""] ?? .gray).frame(width: 8, height: 8)
                         Text(t.title ?? "").font(.callout).lineLimit(1)
                         Spacer(minLength: 0)
                         if let d = t.date, d < today, t.soft != true { Text("ritardo").font(.caption2).foregroundStyle(.red) }
@@ -85,7 +83,7 @@ struct WidgetView: View {
             }
             Spacer(minLength: 0)
             if s.error == nil, !tiles.isEmpty {
-                Text("Prossime").font(.caption.bold()).foregroundStyle(.secondary)
+                Text("Prossime").font(.caption).foregroundStyle(.secondary)
                 HStack(spacing: 6) { ForEach(tiles, id: \.id, content: card) }
             }
         }
@@ -103,8 +101,7 @@ extension WidgetView {
                     Text(p.emoji)
                         .font(.callout)
                         .frame(maxWidth: .infinity, minHeight: 22)
-                        .background(c.opacity(active == p.id ? 0.55 : 0.15), in: RoundedRectangle(cornerRadius: 6))
-                        .overlay(RoundedRectangle(cornerRadius: 6).stroke(c, lineWidth: active == p.id ? 1.5 : 0))
+                        .background(active == p.id ? AnyShapeStyle(c.opacity(0.3)) : AnyShapeStyle(.fill.quaternary), in: RoundedRectangle(cornerRadius: 6))
                 }
                 .help(p.name)
                 .accessibilityLabel("Filtra \(p.name)")
@@ -116,16 +113,14 @@ extension WidgetView {
     func card(_ t: Mission) -> some View {
         let c = projectColors[t.project ?? ""] ?? .gray
         return VStack(alignment: .leading, spacing: 4) {
-            Text(Summary.emoji(t.project)).font(.callout)
-                .padding(.horizontal, 4).padding(.vertical, 1)
-                .background(c.opacity(0.2), in: RoundedRectangle(cornerRadius: 5))
+            Circle().fill(c).frame(width: 8, height: 8).padding(.top, 2)
             Text(t.title ?? "").font(.caption).lineLimit(3)
             Spacer(minLength: 0)
             if let d = t.date, d < today, t.soft != true { Text("ritardo").font(.caption2).foregroundStyle(.red) }
             else { Text(t.date.flatMap { $0 > today ? Summary.date($0) : nil }.map { $0.formatted(.dateTime.weekday(.abbreviated).day().locale(Locale(identifier: "it_IT"))) } ?? "oggi")
                 .font(.caption2).foregroundStyle(.secondary) }
         }
-        .padding(6)
+        .padding(8)
         .frame(maxWidth: .infinity, minHeight: 84, maxHeight: 84, alignment: .topLeading)
         .background(.fill.quaternary, in: RoundedRectangle(cornerRadius: 8))
     }

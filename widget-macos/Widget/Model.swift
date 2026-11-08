@@ -32,7 +32,6 @@ struct Summary {
         ("aisa", "AISA", "🎓"), ("afk", "AFK", "🕹️"), ("frobby", "Frobby", "🐸"), ("giochi", "Game Dev", "🎮"),
         ("cinic", "Cinic Games", "💀"), ("vgi", "Videogiochitalia.it", "🖥️"), ("personale", "Altro", "🎨"),
     ]
-    static func emoji(_ id: String?) -> String { projects.first { $0.id == id }?.emoji ?? "🎨" }
     static let ranks = ["Recluta", "Apprendista", "Pianificatore", "Stratega", "Capomissione", "Veterano", "Leggenda"]
 
     static func ymd(_ d: Date) -> String {
